@@ -1,0 +1,5 @@
+{
+    "mongoURI": "mongodb+srv://billshewan:qeoCuQjQWwzHlszl@cluster0.xeorh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    "jwtSecret": "your_jwt_secret_key",
+    "jwtExpiration": 86400
+  }
