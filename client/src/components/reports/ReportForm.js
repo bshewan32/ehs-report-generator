@@ -45,7 +45,8 @@ const ReportForm = () => {
       inProgressPercentage: 0,
       nonCompliantPercentage: 0,
       upcomingRegulations: '',
-      complianceIssues: []
+      complianceIssues: [],
+      complianceActions: ''
     },
     incidents: [],
     riskAssessment: [],
@@ -857,6 +858,26 @@ const handleSubmit = (e) => {
                 <option value="Partially Compliant">Partially Compliant</option>
                 <option value="Non-Compliant">Non-Compliant</option>
               </select>
+            </div>
+            <div className="form-group">
+              <label>Current Compliance Issues</label>
+              <textarea
+                name="compliance.complianceIssues"
+                value={Array.isArray(formData.compliance.complianceIssues) ? formData.compliance.complianceIssues.join('\n') : ''}
+                onChange={(e) => {
+                  const issuesArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    compliance: {
+                      ...formData.compliance,
+                      complianceIssues: issuesArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each compliance issue on a new line (e.g., Machine guarding inspection overdue)"
+              ></textarea>
             </div>
             
             <div className="form-group">

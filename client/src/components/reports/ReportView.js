@@ -304,22 +304,40 @@ const ReportView = () => {
           <div className="compliance-section">
             <div className="compliance-status-card">
               <h4>Overall Status</h4>
-              <div className={`compliance-indicator ${
-                report.compliance.status === 'Fully Compliant' ? 'status-green' :
-                report.compliance.status === 'Partially Compliant' ? 'status-amber' :
-                'status-red'
-              }`}>
+              <div className={`compliance-indicator ${report.compliance.status === 'Fully Compliant' ? 'status-green' :
+                  report.compliance.status === 'Partially Compliant' ? 'status-amber' :
+                    'status-red'
+                }`}>
                 {report.compliance.status}
               </div>
             </div>
-            
-            <div className="upcoming-regulations">
-              <h4>Upcoming Regulations</h4>
-              <p>{report.compliance.upcomingRegulations || 'No upcoming regulatory changes identified.'}</p>
+
+            <div className="compliance-details">
+              <div className="compliance-issues">
+                <h4>Compliance Issues</h4>
+                {report.compliance.complianceIssues && report.compliance.complianceIssues.length > 0 ? (
+                  <ul>
+                    {report.compliance.complianceIssues.map((issue, index) => (
+                      <li key={index}>{issue}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No compliance issues reported.</p>
+                )}
+              </div>
+
+              <div className="upcoming-regulations">
+                <h4>Upcoming Regulations</h4>
+                <p>{report.compliance.upcomingRegulations || 'No upcoming regulatory changes identified.'}</p>
+              </div>
+
+              <div className="compliance-actions">
+                <h4>Compliance Actions</h4>
+                <p>{report.compliance.complianceActions || 'No compliance actions documented.'}</p>
+              </div>
             </div>
           </div>
         </div>
-        
         <div className="report-section">
           <h3>Safety Initiatives</h3>
           <div className="initiatives-section">
@@ -329,10 +347,10 @@ const ReportView = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="report-section">
           <h3>Analysis & Recommendations</h3>
-          
+
           <div className="analysis-section">
             <div className="trends">
               <h4>Trends</h4>
@@ -346,7 +364,7 @@ const ReportView = () => {
                 <p>No trends identified.</p>
               )}
             </div>
-            
+
             <div className="recommendations">
               <h4>Recommendations</h4>
               {report.analysis?.recommendations && report.analysis.recommendations.length > 0 ? (

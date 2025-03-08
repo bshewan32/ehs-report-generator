@@ -119,7 +119,8 @@ const ReportSchema = new Schema({
     inProgressPercentage: Number,
     nonCompliantPercentage: Number,
     upcomingRegulations: String,
-    complianceIssues: [String]
+    complianceIssues: [String],
+    complianceActions: String
   },
   incidents: [IncidentSchema],
   riskAssessment: [RiskAssessmentSchema],

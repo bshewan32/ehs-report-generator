@@ -3,6 +3,9 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMetricsSummary } from '../../features/reports/reportSlice';
+import AnalysisRecommendations from './AnalysisRecommendations';
+
+
 
 // Dashboard Components
 import MetricsOverview from './MetricsOverview';
@@ -73,6 +76,10 @@ const Dashboard = () => {
           <div className="chart-container">
             <h3>Recent Reports</h3>
             <RecentReports />
+          </div>
+          
+          <div className="dashboard-section full-width">
+            <AnalysisRecommendations />
           </div>
         </div>
       </div>
