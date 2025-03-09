@@ -596,3 +596,56 @@ ul {
     grid-template-columns: 1fr;
   }
 }
+
+/* Training compliance styles */
+.training-compliance-section {
+  margin-bottom: 2rem;
+}
+
+.file-upload {
+  margin-bottom: 1.5rem;
+}
+
+.summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric-card {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0275d8;
+}
+
+.metric-detail {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.training-summary .table {
+  margin-bottom: 1.5rem;
+}
+
+/* Add to your CSS */
+.critical-risks-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.critical-risks-section .form-control {
+  font-size: 0.9rem;
+}
+
+.critical-risks-section .table td {
+  vertical-align: middle;
+}

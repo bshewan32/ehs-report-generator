@@ -9,27 +9,29 @@ const AnalysisRecommendations = () => {
   const { reports, loading } = useSelector(state => state.reports);
   const dispatch = useDispatch();
 
-    // Inside the component
-    useEffect(() => {
-        dispatch(getReports()); // Get the raw reports
-    }, [dispatch]);
+
+  useEffect(() => {
+    if (!reports || reports.length === 0) {
+      dispatch(getReports());
+    }
+  }, [dispatch, reports.length]); // Adding reports.length as dependency
 
   // At the beginning of the AnalysisRecommendations component
-    useEffect(() => {
-        if (reports && reports.length > 0) {
-            console.log('Reports available for analysis:', reports);
-            console.log('First report training data:', reports[0]?.metrics?.leading?.trainingCompleted);
-            console.log('First report compliance data:', reports[0]?.compliance);
-        }
+  useEffect(() => {
+    if (reports && reports.length > 0) {
+      console.log('Reports available for analysis:', reports);
+      console.log('First report training data:', reports[0]?.metrics?.leading?.trainingCompleted);
+      console.log('First report compliance data:', reports[0]?.compliance);
+    }
     }, [reports]);
 
-  if (loading || !reports || reports.length === 0) {
-    return (
-      <div className="analysis-container">
-        <h3>Analysis & Recommendations</h3>
-        <p>Insufficient data to generate analysis and recommendations.</p>
-      </div>
-    );
+    if (loading || !Array.isArray(reports) || reports.length === 0) {
+      return (
+          <div className="analysis-container">
+              <h3>Analysis & Recommendations</h3>
+              <p>Insufficient data to generate analysis and recommendations.</p>
+          </div>
+      );
   }
   
   // Helper function to analyze metrics

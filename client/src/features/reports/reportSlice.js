@@ -108,7 +108,9 @@ const reportSlice = createSlice({
       })
       .addCase(getReports.fulfilled, (state, action) => {
         state.loading = false;
-        state.reports = action.payload.reports;
+        // Handle both array and object with reports property
+        state.reports = Array.isArray(action.payload) ? action.payload :
+          (action.payload.reports || []);
       })
       .addCase(getReports.rejected, (state, action) => {
         state.loading = false;
