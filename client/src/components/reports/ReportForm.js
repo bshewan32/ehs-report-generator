@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { createReport, getReport, updateReport } from '../../features/reports/reportSlice';
 import TrainingCompliance from './TrainingCompliance';
+import OHSMSCompliance from './OHSMSCompliance';
+import AssessmentRecommendations from './AssessmentRecommendations';
 
 // This component will be fleshed out with better UI elements and more comprehensive fields
 
@@ -17,75 +19,106 @@ const ReportForm = () => {
   const { user } = useSelector(state => state.auth);
 
   // Initial form data state
-  const [formData, setFormData] = useState({
-    companyName: '',
-    reportPeriod: '',
-    reportType: 'Monthly',
-    metrics: {
-      lagging: {
-        incidentCount: 0,
-        nearMissCount: 0,
-        lostTimeIncidents: 0,
-        totalRecordableIncidentRate: 0,
-        lostTimeIncidentRate: 0,
-        severityRate: 0
-      },
-      leading: {
-        inspectionsCompleted: 0,
-        inspectionsPlanned: 0,
-        trainingCompleted: 0,
-        safetyObservations: 0,
-        safetyMeetings: 0,
-        hazardsIdentified: 0,
-        hazardsClosed: 0
-      }
+  // Initial form data state
+const [formData, setFormData] = useState({
+  companyName: '',
+  reportPeriod: '',
+  reportType: 'Monthly',
+  metrics: {
+    lagging: {
+      incidentCount: 0,
+      nearMissCount: 0,
+      lostTimeIncidents: 0,
+      totalRecordableIncidentRate: 0,
+      lostTimeIncidentRate: 0,
+      severityRate: 0
     },
-    criticalRisks: {
-      cr1: { name: 'Working at Heights', status: 'effective', changes: '', incidents: 0 },
-      cr2: { name: 'Vehicle Operations', status: 'effective', changes: '', incidents: 0 },
-      cr3: { name: 'Electrical Safety', status: 'effective', changes: '', incidents: 0 },
-      cr4: { name: 'Machinery & Equipment', status: 'effective', changes: '', incidents: 0 },
-      cr5: { name: 'Confined Spaces', status: 'effective', changes: '', incidents: 0 },
-      cr6: { name: 'Hazardous Substances', status: 'effective', changes: '', incidents: 0 },
-      cr7: { name: 'Excavation & Trenching', status: 'effective', changes: '', incidents: 0 },
-      cr8: { name: 'Lifting Operations', status: 'effective', changes: '', incidents: 0 },
-      cr9: { name: 'Hot Work', status: 'effective', changes: '', incidents: 0 },
-      cr10: { name: 'Remote/Isolated Work', status: 'effective', changes: '', incidents: 0 },
-      cr11: { name: 'Energy Isolation', status: 'effective', changes: '', incidents: 0 },
-      cr12: { name: 'Working Over Water', status: 'effective', changes: '', incidents: 0 }
-    },
-    compliance: {
-      status: 'Fully Compliant',
-      fullyCompliantPercentage: 100,
-      inProgressPercentage: 0,
-      nonCompliantPercentage: 0,
-      upcomingRegulations: '',
-      complianceIssues: [],
-      complianceActions: ''
-    },
-    training: {
-      compliancePercentage: 0,
-      expiredCount: 0,
-      upcomingExpirations: 0,
-      criticalGapsCount: 0,
-      departmentCompliance: [],
-      notes: ''
-    },
-    incidents: [],
-    riskAssessment: [],
-    safetyInitiatives: {
-      current: '',
-      upcoming: []
-    },
-    analysis: {
-      trends: [],
-      positiveObservations: [],
-      concernAreas: [],
-      recommendations: []
-    },
-    historicalData: []
-  });
+    leading: {
+      inspectionsCompleted: 0,
+      inspectionsPlanned: 0,
+      trainingCompleted: 0,
+      safetyObservations: 0,
+      safetyMeetings: 0,
+      hazardsIdentified: 0,
+      hazardsClosed: 0
+    }
+  },
+  criticalRisks: {
+    cr1: { name: 'Working at Heights', status: 'effective', changes: '', incidents: 0 },
+    cr2: { name: 'Vehicle Operations', status: 'effective', changes: '', incidents: 0 },
+    cr3: { name: 'Electrical Safety', status: 'effective', changes: '', incidents: 0 },
+    cr4: { name: 'Machinery & Equipment', status: 'effective', changes: '', incidents: 0 },
+    cr5: { name: 'Confined Spaces', status: 'effective', changes: '', incidents: 0 },
+    cr6: { name: 'Hazardous Substances', status: 'effective', changes: '', incidents: 0 },
+    cr7: { name: 'Excavation & Trenching', status: 'effective', changes: '', incidents: 0 },
+    cr8: { name: 'Lifting Operations', status: 'effective', changes: '', incidents: 0 },
+    cr9: { name: 'Hot Work', status: 'effective', changes: '', incidents: 0 },
+    cr10: { name: 'Remote/Isolated Work', status: 'effective', changes: '', incidents: 0 },
+    cr11: { name: 'Energy Isolation', status: 'effective', changes: '', incidents: 0 },
+    cr12: { name: 'Working Over Water', status: 'effective', changes: '', incidents: 0 }
+  },
+  compliance: {
+    status: 'Fully Compliant',
+    fullyCompliantPercentage: 100,
+    inProgressPercentage: 0,
+    nonCompliantPercentage: 0,
+    upcomingRegulations: '',
+    complianceIssues: [],
+    complianceActions: '',
+    ohsms: {
+      elements: {},
+      overallScore: 0
+    }
+  },
+  training: {
+    compliancePercentage: 0,
+    expiredCount: 0,
+    upcomingExpirations: 0,
+    criticalGapsCount: 0,
+    departmentCompliance: [],
+    notes: ''
+  },
+  incidents: [],
+  riskAssessment: [],
+  safetyInitiatives: {
+    current: '',
+    upcoming: []
+  },
+  assessment: {
+    performanceRating: 'Satisfactory',
+    keyStrengths: [],
+    keyWeaknesses: [],
+    recommendations: [],
+    criticalActions: [],
+    improvementAreas: []
+  },
+  analysis: {
+    trends: [],
+    positiveObservations: [],
+    concernAreas: [],
+    recommendations: []
+  },
+  historicalData: []
+});
 
+  const handleOHSMSComplianceChange = (ohsmsData) => {
+    setFormData({
+      ...formData,
+      compliance: {
+        ...formData.compliance,
+        ohsms: ohsmsData,
+        ohsmsScore: ohsmsData.overallScore
+      }
+    });
+  };
+  
+  const handleAssessmentChange = (assessmentData) => {
+    setFormData({
+      ...formData,
+      assessment: assessmentData
+    });
+  };
+  
   const handleCriticalRiskChange = (e) => {
     const { name, value } = e.target;
     const [riskId, field] = name.split('.');
@@ -123,7 +156,7 @@ const ReportForm = () => {
   // Form step state
   const [step, setStep] = useState(1);
   // Total number of steps
-  const totalSteps = 6;
+  const totalSteps = 7;
   
   // Form validation state
   const [errors, setErrors] = useState({});
@@ -1015,113 +1048,164 @@ case 5:
     </div>
   );
 
-// Case 6: Analysis & Recommendations
-case 6:
+      // Case 6: Analysis & Recommendations
+      // Fixed case 6 and 7 in the renderFormStep function
+      case 6:
+        return (
+          <div className="form-step">
+            <h2 className="step-title">OHSMS Compliance</h2>
+
+            <OHSMSCompliance
+              initialData={formData.compliance.ohsms}
+              onDataChange={handleOHSMSComplianceChange}
+            />
+
+            <div className="form-group">
+              <label>OHSMS Compliance Score (%)</label>
+              <input
+                type="number"
+                name="compliance.ohsmsScore"
+                value={formData.compliance.ohsmsScore || 0}
+                onChange={handleChange}
+                min="0"
+                max="100"
+                className="form-control"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Key Compliance Categories</label>
+              <div className="compliance-categories">
+                {['Chemical Management', 'Machine Guarding', 'Fall Protection', 'Emergency Preparedness'].map(category => (
+                  <div key={category} className="compliance-category">
+                    <label>{category}</label>
+                    <select
+                      name={`compliance.categories.${category}`}
+                      value={formData.compliance.categories?.[category] || 'compliant'}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          compliance: {
+                            ...formData.compliance,
+                            categories: {
+                              ...(formData.compliance.categories || {}),
+                              [category]: e.target.value
+                            }
+                          }
+                        });
+                      }}
+                      className="form-control"
+                    >
+                      <option value="compliant">Compliant</option>
+                      <option value="partially">Partially Compliant</option>
+                      <option value="non-compliant">Non-Compliant</option>
+                      <option value="not-applicable">Not Applicable</option>
+                    </select>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group col-md-4">
+                <label>Fully Compliant %</label>
+                <input
+                  type="number"
+                  name="compliance.fullyCompliantPercentage"
+                  value={formData.compliance.fullyCompliantPercentage}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  className="form-control"
+                />
+              </div>
+
+              <div className="form-group col-md-4">
+                <label>In Progress %</label>
+                <input
+                  type="number"
+                  name="compliance.inProgressPercentage"
+                  value={formData.compliance.inProgressPercentage}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  className="form-control"
+                />
+              </div>
+
+              <div className="form-group col-md-4">
+                <label>Non-Compliant %</label>
+                <input
+                  type="number"
+                  name="compliance.nonCompliantPercentage"
+                  value={formData.compliance.nonCompliantPercentage}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Current Compliance Issues</label>
+              <textarea
+                name="compliance.complianceIssues"
+                value={Array.isArray(formData.compliance.complianceIssues) ? formData.compliance.complianceIssues.join('\n') : ''}
+                onChange={(e) => {
+                  const issuesArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    compliance: {
+                      ...formData.compliance,
+                      complianceIssues: issuesArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each compliance issue on a new line (e.g., Machine guarding inspection overdue)"
+              ></textarea>
+            </div>
+
+            <div className="form-group mt-4">
+              <label>Upcoming Regulations</label>
+              <textarea
+                name="compliance.upcomingRegulations"
+                value={formData.compliance.upcomingRegulations}
+                onChange={handleChange}
+                className="form-control"
+                rows="3"
+                placeholder="Describe any upcoming regulatory changes that may impact operations..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Compliance Actions</label>
+              <textarea
+                name="compliance.complianceActions"
+                value={formData.compliance.complianceActions}
+                onChange={handleChange}
+                className="form-control"
+                rows="3"
+                placeholder="Describe actions being taken to address compliance issues..."
+              ></textarea>
+            </div>
+          </div>
+        );
+
+      // Case 7 fixed - removing the unreachable code that appears after the case block
+case 7:
   return (
     <div className="form-step">
-      <h2 className="step-title">Analysis & Recommendations</h2>
+      <h2 className="step-title">Assessment & Recommendations</h2>
       
-      <div className="form-group">
-        <label>Compliance Status</label>
-        <select
-          name="compliance.status"
-          value={formData.compliance.status}
-          onChange={handleChange}
-          className="form-control"
-        >
-          <option value="Fully Compliant">Fully Compliant</option>
-          <option value="Partially Compliant">Partially Compliant</option>
-          <option value="Non-Compliant">Non-Compliant</option>
-        </select>
-      </div>
-
-      <div className="form-row">
-        <div className="form-group col-md-4">
-          <label>Fully Compliant %</label>
-          <input
-            type="number"
-            name="compliance.fullyCompliantPercentage"
-            value={formData.compliance.fullyCompliantPercentage}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            className="form-control"
-          />
-        </div>
-        
-        <div className="form-group col-md-4">
-          <label>In Progress %</label>
-          <input
-            type="number"
-            name="compliance.inProgressPercentage"
-            value={formData.compliance.inProgressPercentage}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            className="form-control"
-          />
-        </div>
-        
-        <div className="form-group col-md-4">
-          <label>Non-Compliant %</label>
-          <input
-            type="number"
-            name="compliance.nonCompliantPercentage"
-            value={formData.compliance.nonCompliantPercentage}
-            onChange={handleChange}
-            min="0"
-            max="100"
-            className="form-control"
-          />
-        </div>
-      </div>
+      <AssessmentRecommendations
+        reportData={formData}
+        onAssessmentChange={handleAssessmentChange}
+      />
       
-      <div className="form-group">
-        <label>Current Compliance Issues</label>
-        <textarea
-          name="compliance.complianceIssues"
-          value={Array.isArray(formData.compliance.complianceIssues) ? formData.compliance.complianceIssues.join('\n') : ''}
-          onChange={(e) => {
-            const issuesArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              compliance: {
-                ...formData.compliance,
-                complianceIssues: issuesArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each compliance issue on a new line (e.g., Machine guarding inspection overdue)"
-        ></textarea>
-      </div>
-      
-      <div className="form-group">
-        <label>Upcoming Regulations</label>
-        <textarea
-          name="compliance.upcomingRegulations"
-          value={formData.compliance.upcomingRegulations}
-          onChange={handleChange}
-          className="form-control"
-          rows="3"
-          placeholder="Describe any upcoming regulatory changes that may impact operations..."
-        ></textarea>
-      </div>
-
-      <div className="form-group">
-        <label>Compliance Actions</label>
-        <textarea
-          name="compliance.complianceActions"
-          value={formData.compliance.complianceActions}
-          onChange={handleChange}
-          className="form-control"
-          rows="3"
-          placeholder="Describe actions being taken to address compliance issues..."
-        ></textarea>
-      </div>
-      
-      <hr className="section-divider" />
+      <hr className="section-divider mt-5" />
       
       <h3>Safety Initiatives</h3>
       
@@ -1160,7 +1244,7 @@ case 6:
       
       <hr className="section-divider" />
       
-      <h3>Trends and Analysis</h3>
+      <h3>Additional Analysis</h3>
       
       <div className="form-group">
         <label>Trends (one per line)</label>
@@ -1247,8 +1331,8 @@ case 6:
       </div>
     </div>
   );
-      
-      default:
+
+        default:
         return null;
     }
   };

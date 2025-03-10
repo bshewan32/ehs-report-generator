@@ -59,6 +59,8 @@ const RiskAssessmentSchema = new Schema({
   }
 });
 
+
+
 // Main Report Schema
 const ReportSchema = new Schema({
   companyName: {
@@ -109,18 +111,44 @@ const ReportSchema = new Schema({
       inspections: Number
     }
   ],
+  // In models/Report.js - update the compliance schema
   compliance: {
     status: {
       type: String,
       enum: ['Fully Compliant', 'Partially Compliant', 'Non-Compliant'],
       required: true
     },
+    ohsmsScore: {
+      type: Number,
+      min: 0,
+      max: 100
+    },
     fullyCompliantPercentage: Number,
     inProgressPercentage: Number,
     nonCompliantPercentage: Number,
+    categories: {
+      type: Map,
+      of: String
+    },
     upcomingRegulations: String,
     complianceIssues: [String],
     complianceActions: String
+  },
+  // In models/Report.js - add to the ReportSchema
+  criticalRisks: {
+    type: Map,
+    of: {
+      name: String,
+      status: {
+        type: String,
+        enum: ['effective', 'adequate', 'needsImprovement', 'inadequate']
+      },
+      changes: String,
+      incidents: {
+        type: Number,
+        default: 0
+      }
+    }
   },
   incidents: [IncidentSchema],
   riskAssessment: [RiskAssessmentSchema],

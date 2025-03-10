@@ -649,3 +649,170 @@ ul {
 .critical-risks-section .table td {
   vertical-align: middle;
 }
+
+/* Critical Risk Status Styles */
+.critical-risk-chart {
+  margin-bottom: 1.5rem;
+}
+
+.critical-risk-status {
+  margin-top: 1.5rem;
+}
+
+.status-effective {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.status-adequate {
+  color: #3498db;
+}
+
+.status-needsImprovement {
+  color: #f39c12;
+}
+
+.status-inadequate {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.compliance-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.compliance-category {
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 4px;
+}
+
+/* Add to your CSS file */
+
+/* OHSMS Compliance Component */
+.ohsms-compliance-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.compliance-overview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.compliance-score-summary {
+  display: flex;
+  align-items: center;
+}
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.score-value {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.score-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.elements-assessment {
+  margin-top: 15px;
+}
+
+.compliance-instructions {
+  color: #666;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.element-item {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.element-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.element-header h5 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.element-score-input {
+  display: flex;
+  align-items: center;
+  width: 250px;
+}
+
+.element-score-input input {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.element-description {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.element-notes {
+  margin-top: 10px;
+}
+
+/* Assessment & Recommendations Component */
+.assessment-recommendations-container {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.auto-generate-section {
+  background-color: #e9f7fe;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auto-generate-section button {
+  min-width: 200px;
+}
+
+.auto-generate-section p {
+  margin: 0;
+  padding-left: 15px;
+}

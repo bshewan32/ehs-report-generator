@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMetricsSummary } from '../../features/reports/reportSlice';
 import AnalysisRecommendations from './AnalysisRecommendations';
-
-
+import CriticalRiskStatus from './CriticalRiskStatus';
 
 // Dashboard Components
 import MetricsOverview from './MetricsOverview';
@@ -18,15 +17,15 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { metrics, loading } = useSelector(state => state.reports);
   const { user } = useSelector(state => state.auth);
-
+  
   useEffect(() => {
     dispatch(getMetricsSummary());
   }, [dispatch]);
-
+  
   if (loading) {
     return <div>Loading...</div>;
   }
-
+  
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -58,18 +57,23 @@ const Dashboard = () => {
           </div>
           
           <div className="chart-container">
-            <h3>Compliance Status</h3>
-            <ComplianceStatus 
-              compliance={metrics ? metrics.complianceStatus : null} 
-            />
+            <h3>Critical Risk Protocols</h3>
+            <CriticalRiskStatus />
           </div>
         </div>
         
         <div className="chart-row">
           <div className="chart-container">
             <h3>Risk Assessment</h3>
-            <RiskHeatmap 
-              riskAreas={metrics ? metrics.highRiskAreas : []} 
+            <RiskHeatmap
+              riskAreas={metrics ? metrics.highRiskAreas : []}
+            />
+          </div>
+          
+          <div className="chart-container">
+            <h3>Compliance Status</h3>
+            <ComplianceStatus
+              compliance={metrics ? metrics.complianceStatus : null}
             />
           </div>
           
@@ -77,10 +81,10 @@ const Dashboard = () => {
             <h3>Recent Reports</h3>
             <RecentReports />
           </div>
-          
-          <div className="dashboard-section full-width">
-            <AnalysisRecommendations />
-          </div>
+        </div>
+        
+        <div className="dashboard-section full-width">
+          <AnalysisRecommendations />
         </div>
       </div>
     </div>

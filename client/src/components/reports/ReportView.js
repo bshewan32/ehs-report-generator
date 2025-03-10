@@ -54,7 +54,55 @@ const ReportView = () => {
       </div>
     );
   };
+  const renderCriticalRiskChart = () => {
+    if (!report.criticalRisks) return null;
 
+    // Prepare data for visualization
+    const criticalRiskData = Object.entries(report.criticalRisks).map(([key, risk]) => ({
+      name: risk.name,
+      incidents: risk.incidents || 0,
+      status: risk.status || 'adequate'
+    }));
+    return (
+      <div className="critical-risk-chart">
+        <h4>Critical Risk Status</h4>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={criticalRiskData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="incidents" fill="#8884d8" name="Related Incidents" />
+          </BarChart>
+        </ResponsiveContainer>
+
+        <div className="critical-risk-status">
+          <h4>Protocol Implementation Status</h4>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Critical Risk</th>
+                <th>Status</th>
+                <th>Changes This Period</th>
+              </tr>
+            </thead>
+            <tbody>
+              {criticalRiskData.map((risk, index) => (
+                <tr key={index}>
+                  <td>{risk.name}</td>
+                  <td className={`status-${risk.status}`}>
+                    {risk.status.charAt(0).toUpperCase() + risk.status.slice(1).replace(/([A-Z])/g, ' $1')}
+                  </td>
+                  <td>{report.criticalRisks[Object.keys(report.criticalRisks)[index]].changes || 'None'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
   const renderRiskChart = () => {
     if (!report.riskAssessment || report.riskAssessment.length === 0) {
       return null;
@@ -262,6 +310,10 @@ const ReportView = () => {
           ) : (
             <p>No incidents reported for this period.</p>
           )}
+        </div>
+        <div className="report-section">
+          <h3>Critical Risk Protocols</h3>
+          {renderCriticalRiskChart()}
         </div>
         
         <div className="report-section">
