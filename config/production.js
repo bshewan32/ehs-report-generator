@@ -1,5 +1,5 @@
 {
-  "MONGODB_URI": "${MONGODB_URI}",
-  "JWT_SECRET": "${JWT_SECRET}",
-  "JWT_EXPIRATION": "${JWT_EXPIRATION}"
+  "mongoURI": "${MONGODB_URI}",
+  "jwtSecret": "${JWT_SECRET}",
+  "jwtExpiration": "${JWT_EXPIRATION}"
 }
