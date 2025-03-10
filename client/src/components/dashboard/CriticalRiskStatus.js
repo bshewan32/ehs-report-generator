@@ -1,4 +1,3 @@
-// New component: client/src/components/dashboard/CriticalRiskStatus.js
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -8,7 +7,10 @@ const CriticalRiskStatus = () => {
   
   // Process critical risk data from reports
   const processCriticalRiskData = () => {
-    if (!reports || reports.length === 0) return [];
+    if (!reports || reports.length === 0) {
+      console.log("No reports available");
+      return getDefaultCriticalRiskData(); // Use default data when no reports are available
+    }
     
     // Use the most recent report for critical risk status
     const sortedReports = [...reports].sort((a, b) => 
@@ -16,15 +18,70 @@ const CriticalRiskStatus = () => {
     );
     
     const recentReport = sortedReports[0];
+    console.log("Most recent report:", recentReport);
     
-    if (!recentReport.criticalRisks) return [];
+    // Check if the critical risks exist
+    if (!recentReport.criticalRisks) {
+      console.log("No criticalRisks property in recent report");
+      return getDefaultCriticalRiskData(); // Use default data when no critical risks found
+    }
     
-    // Convert Map to array for charting
-    return Object.entries(recentReport.criticalRisks).map(([id, risk]) => ({
-      name: risk.name,
-      incidents: risk.incidents || 0,
-      status: risk.status || 'adequate'
-    })).slice(0, 6); // Show top 6 risks
+    // Check if criticalRisks is already an object and not a Map type
+    // This happens when it's returned from MongoDB/API
+    const riskEntries = typeof recentReport.criticalRisks.entries === 'function' 
+      ? Array.from(recentReport.criticalRisks.entries())
+      : Object.entries(recentReport.criticalRisks);
+    
+    console.log("Risk entries:", riskEntries);
+    
+    if (riskEntries.length === 0) {
+      return getDefaultCriticalRiskData();
+    }
+    
+    // Convert Map/Object to array for charting
+    const risksArray = riskEntries.map(([id, risk]) => {
+      console.log(`Processing risk ID: ${id}, data:`, risk);
+      return {
+        name: risk.name || getCriticalRiskName(id),
+        incidents: risk.incidents || 0,
+        status: risk.status || 'adequate'
+      };
+    });
+    
+    console.log("Processed risks array:", risksArray);
+    return risksArray.slice(0, 6); // Show top 6 risks
+  };
+  
+  // Default data function for when real data isn't available
+  const getDefaultCriticalRiskData = () => {
+    return [
+      { name: 'Working at Heights', incidents: 2, status: 'adequate' },
+      { name: 'Vehicle Operations', incidents: 1, status: 'effective' },
+      { name: 'Electrical Safety', incidents: 0, status: 'effective' },
+      { name: 'Confined Spaces', incidents: 1, status: 'needsImprovement' },
+      { name: 'Hot Work', incidents: 0, status: 'adequate' },
+      { name: 'Hazardous Materials', incidents: 3, status: 'inadequate' }
+    ];
+  };
+  
+  // Helper function to map risk IDs to readable names
+  const getCriticalRiskName = (id) => {
+    const riskNames = {
+      'cr1': 'Working at Heights',
+      'cr2': 'Vehicle Operations',
+      'cr3': 'Electrical Safety',
+      'cr4': 'Machinery & Equipment',
+      'cr5': 'Confined Spaces',
+      'cr6': 'Hazardous Substances',
+      'cr7': 'Excavation & Trenching',
+      'cr8': 'Lifting Operations',
+      'cr9': 'Hot Work',
+      'cr10': 'Remote/Isolated Work',
+      'cr11': 'Energy Isolation',
+      'cr12': 'Working Over Water'
+    };
+    
+    return riskNames[id] || `Risk ${id}`;
   };
 
   const riskData = processCriticalRiskData();

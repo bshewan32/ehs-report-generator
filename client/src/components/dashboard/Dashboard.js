@@ -2,9 +2,13 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMetricsSummary } from '../../features/reports/reportSlice';
+import { getMetricsSummary, getReports } from '../../features/reports/reportSlice';
 import AnalysisRecommendations from './AnalysisRecommendations';
 import CriticalRiskStatus from './CriticalRiskStatus';
+import { 
+  BarChart, Bar, PieChart, Pie, Cell, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+} from 'recharts';
 
 // Dashboard Components
 import MetricsOverview from './MetricsOverview';
@@ -12,14 +16,16 @@ import IncidentTrends from './IncidentTrends';
 import ComplianceStatus from './ComplianceStatus';
 import RiskHeatmap from './RiskHeatmap';
 import RecentReports from './RecentReports';
+import OHSMSComplianceOverview from './OHSMSComplianceOverview'; // New component
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { metrics, loading } = useSelector(state => state.reports);
+  const { metrics, reports, loading } = useSelector(state => state.reports);
   const { user } = useSelector(state => state.auth);
   
   useEffect(() => {
     dispatch(getMetricsSummary());
+    dispatch(getReports()); // Fetch all reports for OHSMS data
   }, [dispatch]);
   
   if (loading) {
@@ -59,6 +65,14 @@ const Dashboard = () => {
           <div className="chart-container">
             <h3>Critical Risk Protocols</h3>
             <CriticalRiskStatus />
+          </div>
+        </div>
+        
+        {/* New OHSMS Compliance Overview Section */}
+        <div className="chart-row">
+          <div className="chart-container full-width">
+            <h3>OHSMS Compliance Overview</h3>
+            <OHSMSComplianceOverview reports={reports} />
           </div>
         </div>
         

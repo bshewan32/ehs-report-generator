@@ -54,6 +54,7 @@ const ReportView = () => {
       </div>
     );
   };
+
   const renderCriticalRiskChart = () => {
     if (!report.criticalRisks) return null;
 
@@ -103,6 +104,7 @@ const ReportView = () => {
       </div>
     );
   };
+
   const renderRiskChart = () => {
     if (!report.riskAssessment || report.riskAssessment.length === 0) {
       return null;
@@ -148,6 +150,95 @@ const ReportView = () => {
             <Legend />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+    );
+  };
+
+  // New function to render OHSMS compliance section
+  const renderOHSMSComplianceSection = () => {
+    if (!report.compliance || !report.compliance.ohsmsScore) {
+      return (
+        <div className="compliance-card">
+          <h4>OHSMS Compliance</h4>
+          <p>No OHSMS compliance data available for this report.</p>
+        </div>
+      );
+    }
+
+    // Determine the progress bar class based on the compliance score
+    const getProgressClass = (score) => {
+      if (score >= 80) return 'progress-success';
+      if (score >= 60) return 'progress-info';
+      if (score >= 40) return 'progress-warning';
+      return 'progress-danger';
+    };
+
+    // Format category names for display
+    const formatCategoryName = (category) => {
+      return category
+        .replace(/([A-Z])/g, ' $1') // Insert space before capital letters
+        .replace(/\./g, ' ') // Replace dots with spaces
+        .replace(/^\w/, c => c.toUpperCase()) // Capitalize first letter
+        .trim();
+    };
+
+    // Get appropriate badge class for compliance status
+    const getStatusBadgeClass = (status) => {
+      switch(status) {
+        case 'compliant': return 'badge-success';
+        case 'partially': return 'badge-warning';
+        case 'non-compliant': return 'badge-danger';
+        case 'not-applicable': return 'badge-secondary';
+        default: return 'badge-info';
+      }
+    };
+
+    return (
+      <div className="ohsms-compliance-section">
+        <h4>OHSMS Compliance Score</h4>
+        <div className="ohsms-score">
+          <div className="score-display">
+            <span className="score-value">{report.compliance.ohsmsScore}%</span>
+          </div>
+          <div className="progress">
+            <div 
+              className={`progress-bar ${getProgressClass(report.compliance.ohsmsScore)}`}
+              role="progressbar" 
+              style={{ width: `${report.compliance.ohsmsScore}%` }}
+              aria-valuenow={report.compliance.ohsmsScore} 
+              aria-valuemin="0" 
+              aria-valuemax="100"
+            >
+              {report.compliance.ohsmsScore}%
+            </div>
+          </div>
+        </div>
+
+        {report.compliance.categories && Object.keys(report.compliance.categories).length > 0 && (
+          <div className="compliance-categories">
+            <h4>Compliance Categories</h4>
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(report.compliance.categories).map(([category, status]) => (
+                  <tr key={category}>
+                    <td>{formatCategoryName(category)}</td>
+                    <td>
+                      <span className={`badge ${getStatusBadgeClass(status)}`}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     );
   };
@@ -363,6 +454,9 @@ const ReportView = () => {
                 {report.compliance.status}
               </div>
             </div>
+
+            {/* Add OHSMS Compliance Section here */}
+            {renderOHSMSComplianceSection()}
 
             <div className="compliance-details">
               <div className="compliance-issues">
