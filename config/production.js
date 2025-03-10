@@ -1,5 +1,5 @@
 {
-"MONGODB_URI"="${mongodb+srv://billshewan:qeoCuQjQWwzHlszl@cluster0.xeorh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0}",
-"JWT_SECRET"="${your_jwt_secret_key}",
-"JWT_EXPIRATION"="${604800}"
+  "MONGODB_URI": "${MONGODB_URI}",
+  "JWT_SECRET": "${JWT_SECRET}",
+  "JWT_EXPIRATION": "${JWT_EXPIRATION}"
 }
