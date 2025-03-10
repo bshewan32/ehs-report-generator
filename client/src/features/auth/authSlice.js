@@ -1,7 +1,7 @@
 // client/src/features/auth/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import setAuthToken from '../../utils/setAuthToken';
+import { api, setAuthToken } from '../../utils/setAuthToken';
 
 // Load user
 export const loadUser = createAsyncThunk(

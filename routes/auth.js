@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+require('dotenv').config();
 
 // @route   GET api/auth
 // @desc    Get user data
@@ -49,19 +50,25 @@ router.post('/login', async (req, res) => {
         role: user.role
       }
     };
+
+    const jwtSecret = process.env.JWT_SECRET || config.get('jwtSecret');
+    const jwtExpiration = process.env.JWT_EXPIRATION || config.get('jwtExpiration') || 3600;
     
     jwt.sign(
       payload,
-      config.get('jwtSecret'),
-      { expiresIn: config.get('jwtExpiration') },
+      jwtSecret,
+      { expiresIn: jwtExpiration },
       (err, token) => {
-        if (err) throw err;
+        if (err) {
+          console.error('JWT sign error:', err);
+          throw err;
+        }
         res.json({ token });
       }
     );
   } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Auth error:', err.message);
+    res.status(500).send('Server error');
   }
 });
 

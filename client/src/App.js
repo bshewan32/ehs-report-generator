@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './app/store';
 import { loadUser } from './features/auth/authSlice';
-import setAuthToken from './utils/setAuthToken';
+import { api, setAuthToken } from './utils/setAuthToken';
 
 // Import components
 import Navbar from './components/layout/Navbar';

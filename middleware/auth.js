@@ -14,7 +14,9 @@ module.exports = async function(req, res, next) {
   
   try {
     // Verify token
-    const decoded = jwt.verify(token, config.get('jwtSecret'));
+    const jwtSecret = process.env.JWT_SECRET || config.get('jwtSecret');
+    const decoded = jwt.verify(token, jwtSecret);
+    
     
     // Get user from payload
     const user = await User.findById(decoded.user.id).select('-password');
