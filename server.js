@@ -9,17 +9,22 @@ require('dotenv').config();
 // Initialize Express
 const app = express();
 
-// Connect to MongoDB
-connectDB();
 
 // Middleware
-// In server.js
 app.use(cors({
   origin: ['https://ehs-report-generator.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
   credentials: true
 }));
+
+
+// Connect to MongoDB
+connectDB();
+
+
+app.use(express.json());
+
 
 // Define Routes
 app.use('/api/users', require('./routes/users'));
