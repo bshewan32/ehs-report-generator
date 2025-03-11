@@ -34,7 +34,12 @@ const Login = () => {
   const onSubmit = e => {
     e.preventDefault();
     dispatch(login(formData));
-  };
+  
+  if (localStorage.getItem('token')) {
+    dispatch(loaduser());
+    
+    }
+  }; 
 
   return (
     <div className="login-container">
