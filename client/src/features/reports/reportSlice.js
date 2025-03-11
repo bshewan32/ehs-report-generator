@@ -1,23 +1,8 @@
 // client/src/features/reports/reportSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-// At the top of reportSlice.js, add this import:
-import { api } from '../../utils/setAuthToken';
+import { api, setAuthToken } from '../../utils/setAuthToken';
 
 // Get all reports
-//export const getReports = createAsyncThunk(
-  //'reports/getReports',
-  //async (_, { rejectWithValue }) => {
-   // try {
-     // const res = await api.get('/api/reports');
-     // return res.data;
-   // } catch (err) {
-     // return rejectWithValue(err.response?.data?.message || 'Error fetching reports');
-   // }
- // }
-//);
-
-// Get single report
 export const getReports = createAsyncThunk(
   'reports/getReports',
   async (_, { rejectWithValue }) => {
@@ -38,6 +23,19 @@ export const getReports = createAsyncThunk(
   }
 );
 
+// Get single report
+export const getReport = createAsyncThunk(
+  'reports/getReport',
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await api.get(`/api/reports/${id}`);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.msg || 'Failed to get report');
+    }
+  }
+);
+
 // Create new report
 export const createReport = createAsyncThunk(
   'reports/createReport',
@@ -46,7 +44,7 @@ export const createReport = createAsyncThunk(
       const res = await api.post('/api/reports', formData);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error creating report');
+      return rejectWithValue(err.response?.data?.msg || 'Error creating report');
     }
   }
 );
@@ -59,7 +57,7 @@ export const updateReport = createAsyncThunk(
       const res = await api.put(`/api/reports/${id}`, formData);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error updating report');
+      return rejectWithValue(err.response?.data?.msg || 'Error updating report');
     }
   }
 );
@@ -72,7 +70,7 @@ export const deleteReport = createAsyncThunk(
       await api.delete(`/api/reports/${id}`);
       return id;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error deleting report');
+      return rejectWithValue(err.response?.data?.msg || 'Error deleting report');
     }
   }
 );
@@ -82,10 +80,10 @@ export const getMetricsSummary = createAsyncThunk(
   'reports/getMetricsSummary',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get('/api/reports/metrics/summary');
+      const res = await api.get('/api/reports/metrics/summary');
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error fetching metrics');
+      return rejectWithValue(err.response?.data?.msg || 'Error fetching metrics');
     }
   }
 );
