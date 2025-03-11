@@ -32,18 +32,21 @@ const Login = () => {
   };
   
   const onSubmit = e => {
-    e.preventDefault();
-    dispatch(login(formData))
-      .unwrap()
-      .then(() => {
-        if (localStorage.getItem('token')) {
-          dispatch(loadUser());
-        }
-      })
-      .catch(err => {
-        console.error('Login failed:', err);
-      });
-  };
+  e.preventDefault();
+  console.log('Login attempt with:', formData.email);
+  dispatch(login(formData))
+    .unwrap()
+    .then((result) => {
+      console.log('Login success:', result);
+      if (localStorage.getItem('token')) {
+        console.log('Token found, loading user');
+        dispatch(loadUser());
+      }
+    })
+    .catch(err => {
+      console.error('Login failed:', err);
+    });
+};
   
   return (
     <div className="login-container">

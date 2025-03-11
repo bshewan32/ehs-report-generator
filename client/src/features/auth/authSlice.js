@@ -4,34 +4,39 @@ import axios from 'axios';
 import { api, setAuthToken } from '../../utils/setAuthToken';
 
 // Load user
-// Load user
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { rejectWithValue }) => {
     if (localStorage.token) {
+      console.log('Setting auth token for user load');
       setAuthToken(localStorage.token);
     }
     try {
+      console.log('Making loadUser API request');
       const res = await api.get('/api/auth');
+      console.log('LoadUser API response:', res.data);
       return res.data;
     } catch (err) {
+      console.error('LoadUser API error:', err.response?.data || err.message);
       localStorage.removeItem('token');
-      return rejectWithValue(err.response.data.message);
+      return rejectWithValue(err.response?.data?.message || 'Failed to load user');
     }
   }
 );
-
 // Login user
 export const login = createAsyncThunk(
   'auth/login',
   async (formData, { rejectWithValue }) => {
     try {
+      console.log('Making login API request');
       const res = await api.post('/api/auth/login', formData);
+      console.log('Login API response:', res.data);
       
       localStorage.setItem('token', res.data.token);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response.data.message);
+      console.error('Login API error:', err.response?.data || err.message);
+      return rejectWithValue(err.response?.data?.message || 'Login failed');
     }
   }
 );
