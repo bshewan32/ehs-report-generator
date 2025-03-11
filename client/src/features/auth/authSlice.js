@@ -4,15 +4,15 @@ import axios from 'axios';
 import { api, setAuthToken } from '../../utils/setAuthToken';
 
 // Load user
+// Load user
 export const loadUser = createAsyncThunk(
   'auth/loadUser',
   async (_, { rejectWithValue }) => {
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
-
     try {
-      const res = await axios.get('/api/auth');
+      const res = await api.get('/api/auth');
       return res.data;
     } catch (err) {
       localStorage.removeItem('token');
@@ -26,7 +26,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      const res = await api.post('/api/auth/login', formData);
       
       localStorage.setItem('token', res.data.token);
       return res.data;
@@ -37,11 +37,12 @@ export const login = createAsyncThunk(
 );
 
 // Register user
+// Register user
 export const register = createAsyncThunk(
   'auth/register',
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await axios.post('/api/users', formData);
+      const res = await api.post('/api/users', formData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data.message);
