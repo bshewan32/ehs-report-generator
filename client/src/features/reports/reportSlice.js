@@ -7,7 +7,7 @@ export const getReports = createAsyncThunk(
   'reports/getReports',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get('/api/reports');
+      const res = await api.get('/api/reports');
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Error fetching reports');
@@ -20,7 +20,7 @@ export const getReport = createAsyncThunk(
   'reports/getReport',
   async (id, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`/api/reports/${id}`);
+      const res = await api.get(`/api/reports/${id}`);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Error fetching report');
@@ -46,7 +46,7 @@ export const updateReport = createAsyncThunk(
   'reports/updateReport',
   async ({ id, formData }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`/api/reports/${id}`, formData);
+      const res = await api.put(`/api/reports/${id}`, formData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Error updating report');
@@ -59,7 +59,7 @@ export const deleteReport = createAsyncThunk(
   'reports/deleteReport',
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`/api/reports/${id}`);
+      await api.delete(`/api/reports/${id}`);
       return id;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Error deleting report');
