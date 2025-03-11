@@ -5,17 +5,17 @@ import axios from 'axios';
 import { api } from '../../utils/setAuthToken';
 
 // Get all reports
-export const getReports = createAsyncThunk(
-  'reports/getReports',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await api.get('/api/reports');
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error fetching reports');
-    }
-  }
-);
+//export const getReports = createAsyncThunk(
+  //'reports/getReports',
+  //async (_, { rejectWithValue }) => {
+   // try {
+     // const res = await api.get('/api/reports');
+     // return res.data;
+   // } catch (err) {
+     // return rejectWithValue(err.response?.data?.message || 'Error fetching reports');
+   // }
+ // }
+//);
 
 // Get single report
 export const getReports = createAsyncThunk(
