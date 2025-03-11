@@ -36,7 +36,7 @@ const Login = () => {
     dispatch(login(formData));
   
   if (localStorage.getItem('token')) {
-    dispatch(loaduser());
+    dispatch(loadUser());
     
     }
   }; 
