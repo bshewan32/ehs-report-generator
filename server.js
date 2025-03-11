@@ -22,13 +22,23 @@ app.use('/api/reports', require('./routes/reports'));
 app.use('/api/inspections', require('./routes/inspections'));
 
 // Serve static assets in production
+// Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static('client/build'));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
+  try {
+    app.use(express.static('client/build'));
+    
+    app.get('*', (req, res) => {
+      try {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+      } catch (err) {
+        // If the file doesn't exist, just return a 404 for frontend routes
+        res.status(404).json({ msg: 'Frontend not found' });
+      }
+    });
+  } catch (err) {
+    console.log('Frontend static files not found. API-only mode.');
+  }
 }
 
 const PORT = process.env.PORT || 4000;
