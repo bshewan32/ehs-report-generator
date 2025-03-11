@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, clearError } from '../../features/auth/authSlice';
+import { login, clearError, loadUser } from '../../features/auth/authSlice';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, error } = useSelector(state => state.auth);
-
+  
   useEffect(() => {
     // If already authenticated, redirect to dashboard
     if (isAuthenticated) {
@@ -26,21 +26,25 @@ const Login = () => {
       dispatch(clearError());
     };
   }, [isAuthenticated, navigate, dispatch]);
-
+  
   const onChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  
   const onSubmit = e => {
     e.preventDefault();
-    dispatch(login(formData));
+    dispatch(login(formData))
+      .unwrap()
+      .then(() => {
+        if (localStorage.getItem('token')) {
+          dispatch(loadUser());
+        }
+      })
+      .catch(err => {
+        console.error('Login failed:', err);
+      });
+  };
   
-  if (localStorage.getItem('token')) {
-    dispatch(loadUser());
-    
-    }
-  }; 
-
   return (
     <div className="login-container">
       <h1>Login</h1>
