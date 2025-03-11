@@ -17,6 +17,21 @@ const setAuthToken = (token) => {
   }
 };
 
+// In your setAuthToken.js file
+api.interceptors.request.use(
+  (config) => {
+    // Log token presence in every request
+    const token = localStorage.getItem('token');
+    console.log(`Request to ${config.url}, token present: ${!!token}`);
+    
+    if (token) {
+      config.headers['x-auth-token'] = token;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Add interceptor with more debugging
 api.interceptors.response.use(
   (response) => response,

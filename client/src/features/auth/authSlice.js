@@ -24,24 +24,30 @@ export const loadUser = createAsyncThunk(
   }
 );
 // Login user
+// In authSlice.js
 export const login = createAsyncThunk(
   'auth/login',
-  async (formData, { rejectWithValue }) => {
+  async (formData, { dispatch, rejectWithValue }) => {
     try {
-      console.log('Making login API request');
+      console.log('Making login request with:', formData.email);
       const res = await api.post('/api/auth/login', formData);
-      console.log('Login API response:', res.data);
       
+      // Save token to localStorage
       localStorage.setItem('token', res.data.token);
+      
+      // Set the auth token for future requests
+      setAuthToken(res.data.token);
+      
+      // Immediately load the user data
+      dispatch(loadUser());
+      
       return res.data;
     } catch (err) {
-      console.error('Login API error:', err.response?.data || err.message);
-      return rejectWithValue(err.response?.data?.message || 'Login failed');
+      return rejectWithValue(err.response?.data?.msg || 'Login failed');
     }
   }
 );
 
-// Register user
 // Register user
 export const register = createAsyncThunk(
   'auth/register',

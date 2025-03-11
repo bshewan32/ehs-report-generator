@@ -3,37 +3,31 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../models/User');
 
-module.exports = async function(req, res, next) {
+// Add debugging to middleware/auth.js
+module.exports = function(req, res, next) {
   // Get token from header
   const token = req.header('x-auth-token');
-  
+
+  console.log('Auth middleware checking token:', !!token);
+
   // Check if no token
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    console.log('No token provided');
+    return res.status(401).json({ msg: 'No token, authorization denied' });
   }
-  
+
+  // Verify token
   try {
-    // Verify token
     const jwtSecret = process.env.JWT_SECRET || config.get('jwtSecret');
+    console.log('JWT Secret available:', !!jwtSecret);
+    
     const decoded = jwt.verify(token, jwtSecret);
+    console.log('Token verified for user:', decoded.user?.id);
     
-    
-    // Get user from payload
-    const user = await User.findById(decoded.user.id).select('-password');
-    
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
-    }
-    
-    // Set user in request object
-    req.user = user;
-    
-    // Update last login time
-    await User.findByIdAndUpdate(user.id, { lastLogin: Date.now() });
-    
+    req.user = decoded.user;
     next();
   } catch (err) {
-    console.error('Auth middleware error:', err);
-    res.status(401).json({ message: 'Token is not valid' });
+    console.error('Auth middleware error:', err.message);
+    res.status(401).json({ msg: 'Token is not valid' });
   }
 };

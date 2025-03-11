@@ -18,14 +18,22 @@ export const getReports = createAsyncThunk(
 );
 
 // Get single report
-export const getReport = createAsyncThunk(
-  'reports/getReport',
-  async (id, { rejectWithValue }) => {
+export const getReports = createAsyncThunk(
+  'reports/getReports',
+  async (_, { rejectWithValue }) => {
     try {
-      const res = await api.get(`/api/reports/${id}`);
+      // Make sure the token is in localStorage
+      const token = localStorage.getItem('token');
+      console.log('Getting reports, token present:', !!token);
+      
+      if (token) {
+        setAuthToken(token);
+      }
+      
+      const res = await api.get('/api/reports');
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || 'Error fetching report');
+      return rejectWithValue(err.response?.data?.msg || 'Failed to get reports');
     }
   }
 );
