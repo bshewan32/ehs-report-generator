@@ -33,7 +33,7 @@ export const createReport = createAsyncThunk(
   'reports/createReport',
   async (formData, { rejectWithValue }) => {
     try {
-      const res = await axios.post('/api/reports', formData);
+      const res = await api.post('/api/reports', formData);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Error creating report');
