@@ -29,30 +29,27 @@ ul {
   padding: 0 2rem;
 }
 
+
 /* Buttons */
 .btn {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: none;
-  background: #0275d8;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 4px;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
   font-size: 1rem;
   text-align: center;
-  transition: opacity 0.2s;
-}
-
-.btn:hover {
-  opacity: 0.8;
 }
 
 .btn-primary {
   background: #0275d8;
+  color: #fff;
 }
 
 .btn-secondary {
   background: #6c757d;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.8;
 }
 
 .btn-info {
@@ -147,23 +144,28 @@ ul {
   border-bottom: 1px solid #e9ecef;
 }
 
+/* Dashboard Actions */
+
+
 .dashboard-actions {
-  display: flex;
-  gap: 1rem;
+  flex-direction: column;
 }
 
+/* Metrics Overview - Horizontal Layout */
 .metrics-overview {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 2rem;
+  justify-content: space-between;
 }
 
 .metric-card {
+  flex: 1;
+  min-width: 220px;
   background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -173,21 +175,24 @@ ul {
   color: #0275d8;
 }
 
-.chart-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
 
+/* Chart Section Improvements */
 .chart-container {
   background: #fff;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Reports List */
+
+.chart-row {
+  flex-direction: column;
+}
+
+.chart-container.full-width {
+  width: 100%;
+}
+
 .reports-container {
   background-color: #fff;
   padding: 1.5rem;
@@ -195,18 +200,19 @@ ul {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .reports-list {
-  margin-top: 1.5rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .report-item {
+  flex: 1 1 300px;
   background: #f8f9fa;
   padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .report-actions {
@@ -478,6 +484,11 @@ ul {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .metrics-overview {
+    flex-direction: column;
+  }
 
 /* Add to your CSS file */
 .chart-placeholder {
@@ -1136,5 +1147,11 @@ ul {
 @media (max-width: 768px) {
   .compliance-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Hide Risk Assessment & Compliance Section */
+.risk-heatmap, .compliance-status {
+  display: none;
   }
 }
