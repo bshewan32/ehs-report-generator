@@ -1,84 +1,128 @@
-// MetricsOverview.js
+// client/src/components/dashboard/MetricsOverview.js
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { FaArrowUp, FaArrowDown, FaMinus } from 'react-icons/fa';
 
-const MetricsOverview = () => {
-  const { metrics, loading } = useSelector(state => state.reports);
-  
-  // Check if metrics is undefined or still loading
-  if (loading || !metrics) {
-    return <div className="metrics-loading">Loading metrics...</div>;
-  }
-  
-  // Ensure all required properties exist with fallbacks
-  const {
-    incidentCount = 0,
-    nearMissCount = 0,
-    lostTimeIncidents = 0,
-    totalRecordableIncidentRate = 0,
-    lostTimeIncidentRate = 0
-  } = metrics.lagging || {};
-  
-  const {
-    inspectionsCompleted = 0,
-    inspectionsPlanned = 0,
-    trainingCompleted = 0,
-    safetyObservations = 0,
-    safetyMeetings = 0
-  } = metrics.leading || {};
-  
-  // Calculate inspection completion rate with null check
-  const inspectionRate = inspectionsPlanned > 0 
-    ? ((inspectionsCompleted / inspectionsPlanned) * 100).toFixed(1) 
-    : '0.0';
+const MetricsOverview = ({ metrics }) => {
+  // Fallback data if metrics is null or undefined
+  const defaultMetrics = {
+    incidentCount: 0,
+    incidentTrend: 0,
+    nearMissCount: 0,
+    nearMissTrend: 0,
+    inspectionCount: 0,
+    inspectionTrend: 0,
+    trainingCompliance: 0,
+    trainingTrend: 0,
+    riskAssessmentCount: 0,
+    riskAssessmentTrend: 0,
+    avgRiskScore: 0,
+    riskScoreTrend: 0
+  };
+
+  const data = metrics || defaultMetrics;
+
+  // Helper function to determine trend icon and class
+  const getTrendIndicator = (trendValue) => {
+    if (trendValue > 0) {
+      return { 
+        icon: <FaArrowUp className="trend-icon" />, 
+        class: 'trend-up',
+        text: `${trendValue}% increase`
+      };
+    } else if (trendValue < 0) {
+      return { 
+        icon: <FaArrowDown className="trend-icon" />, 
+        class: 'trend-down',
+        text: `${Math.abs(trendValue)}% decrease`
+      };
+    } else {
+      return { 
+        icon: <FaMinus className="trend-icon" />, 
+        class: '',
+        text: 'No change'
+      };
+    }
+  };
+
+  // Helper function to determine if a trend is positive or negative based on metric type
+  const getMetricClass = (value, trend, isPositiveBetter) => {
+    if (trend === 0) return 'neutral';
+    return (trend > 0 && isPositiveBetter) || (trend < 0 && !isPositiveBetter) 
+      ? 'positive' 
+      : 'negative';
+  };
 
   return (
     <div className="metrics-overview">
-      <div className="metrics-section">
-        <h3>Lagging Indicators</h3>
-        <div className="metrics-grid">
-          <div className="metric-card">
-            <span className="metric-value">{incidentCount}</span>
-            <span className="metric-label">Incidents</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{nearMissCount}</span>
-            <span className="metric-label">Near Misses</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{lostTimeIncidents}</span>
-            <span className="metric-label">Lost Time Incidents</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{totalRecordableIncidentRate.toFixed(2)}</span>
-            <span className="metric-label">Total Recordable IR</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{lostTimeIncidentRate.toFixed(2)}</span>
-            <span className="metric-label">Lost Time IR</span>
-          </div>
+      {/* Lagging Indicators - Incidents */}
+      <div className="metric-card">
+        <div className="metric-title">Incidents (YTD)</div>
+        <div className={`metric-value ${getMetricClass(data.incidentCount, data.incidentTrend, false)}`}>
+          {data.incidentCount}
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.incidentTrend).class}`}>
+          {getTrendIndicator(data.incidentTrend).icon}
+          {getTrendIndicator(data.incidentTrend).text}
         </div>
       </div>
-      
-      <div className="metrics-section">
-        <h3>Leading Indicators</h3>
-        <div className="metrics-grid">
-          <div className="metric-card">
-            <span className="metric-value">{inspectionRate}%</span>
-            <span className="metric-label">Inspection Completion</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{trainingCompleted}%</span>
-            <span className="metric-label">Training Completed</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{safetyObservations}</span>
-            <span className="metric-label">Safety Observations</span>
-          </div>
-          <div className="metric-card">
-            <span className="metric-value">{safetyMeetings}</span>
-            <span className="metric-label">Safety Meetings</span>
-          </div>
+
+      {/* Lagging Indicators - Near Misses */}
+      <div className="metric-card">
+        <div className="metric-title">Near Misses (YTD)</div>
+        <div className={`metric-value ${getMetricClass(data.nearMissCount, data.nearMissTrend, true)}`}>
+          {data.nearMissCount}
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.nearMissTrend).class}`}>
+          {getTrendIndicator(data.nearMissTrend).icon}
+          {getTrendIndicator(data.nearMissTrend).text}
+        </div>
+      </div>
+
+      {/* Leading Indicators - Inspections */}
+      <div className="metric-card">
+        <div className="metric-title">Inspections (YTD)</div>
+        <div className={`metric-value ${getMetricClass(data.inspectionCount, data.inspectionTrend, true)}`}>
+          {data.inspectionCount}
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.inspectionTrend).class}`}>
+          {getTrendIndicator(data.inspectionTrend).icon}
+          {getTrendIndicator(data.inspectionTrend).text}
+        </div>
+      </div>
+
+      {/* Leading Indicators - Training Compliance */}
+      <div className="metric-card">
+        <div className="metric-title">Training Compliance</div>
+        <div className={`metric-value ${getMetricClass(data.trainingCompliance, data.trainingTrend, true)}`}>
+          {data.trainingCompliance}%
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.trainingTrend).class}`}>
+          {getTrendIndicator(data.trainingTrend).icon}
+          {getTrendIndicator(data.trainingTrend).text}
+        </div>
+      </div>
+
+      {/* Leading Indicators - Risk Assessments */}
+      <div className="metric-card">
+        <div className="metric-title">Risk Assessments</div>
+        <div className={`metric-value ${getMetricClass(data.riskAssessmentCount, data.riskAssessmentTrend, true)}`}>
+          {data.riskAssessmentCount}
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.riskAssessmentTrend).class}`}>
+          {getTrendIndicator(data.riskAssessmentTrend).icon}
+          {getTrendIndicator(data.riskAssessmentTrend).text}
+        </div>
+      </div>
+
+      {/* Risk Score */}
+      <div className="metric-card">
+        <div className="metric-title">Average Risk Score</div>
+        <div className={`metric-value ${getMetricClass(data.avgRiskScore, data.riskScoreTrend, false)}`}>
+          {data.avgRiskScore}
+        </div>
+        <div className={`metric-trend ${getTrendIndicator(data.riskScoreTrend).class}`}>
+          {getTrendIndicator(data.riskScoreTrend).icon}
+          {getTrendIndicator(data.riskScoreTrend).text}
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 // client/src/components/dashboard/Dashboard.js
+import './Dashboard.css';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,14 +10,11 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
-
 // Dashboard Components
 import MetricsOverview from './MetricsOverview';
 import IncidentTrends from './IncidentTrends';
-import ComplianceStatus from './ComplianceStatus';
-import RiskHeatmap from './RiskHeatmap';
 import RecentReports from './RecentReports';
-import OHSMSComplianceOverview from './OHSMSComplianceOverview'; // New component
+import OHSMSComplianceOverview from './OHSMSComplianceOverview';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -29,76 +27,94 @@ const Dashboard = () => {
   }, [dispatch]);
   
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="dashboard-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading your dashboard...</p>
+      </div>
+    );
   }
   
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>EHS Dashboard</h1>
+        <div className="header-content">
+          <h1>EHS Dashboard</h1>
+          <p className="dashboard-subtitle">Your health and safety overview</p>
+        </div>
         <div className="dashboard-actions">
           <Link to="/reports/new" className="btn btn-primary">
             Create New Report
           </Link>
-          <Link to="/inspections/new" className="btn btn-secondary">
+          <Link to="/inspections/new" className="btn btn-outline">
             Record Inspection
           </Link>
         </div>
       </div>
       
-      <div className="dashboard-summary">
-        <div className="welcome-message">
+      <div className="welcome-card">
+        <div className="welcome-content">
           <h2>Welcome, {user && user.name}</h2>
-          <p>Here's your EHS overview for the current period.</p>
+          <p>Here's your EHS overview for the current period. Review your metrics and take action where needed.</p>
         </div>
-        
+      </div>
+      
+      {/* Improved Metrics Overview Section with better styling */}
+      <div className="dashboard-metrics-cards">
         <MetricsOverview metrics={metrics} />
       </div>
       
-      <div className="dashboard-charts">
-        <div className="chart-row">
-          <div className="chart-container">
-            <h3>Incident Trends</h3>
-            <IncidentTrends />
+      <div className="dashboard-main-content">
+        {/* First row of charts */}
+        <div className="charts-container">
+          <div className="chart-item">
+            <div className="chart-header">
+              <h3>Incident Trends</h3>
+              <span className="chart-period">Last 12 months</span>
+            </div>
+            <div className="chart-body">
+              <IncidentTrends />
+            </div>
           </div>
           
-          <div className="chart-container">
-            <h3>Critical Risk Protocols</h3>
-            <CriticalRiskStatus />
+          <div className="chart-item">
+            <div className="chart-header">
+              <h3>Critical Risk Protocols</h3>
+              <span className="chart-period">Status overview</span>
+            </div>
+            <div className="chart-body">
+              <CriticalRiskStatus />
+            </div>
           </div>
         </div>
         
-        {/* New OHSMS Compliance Overview Section */}
-        <div className="chart-row">
-          <div className="chart-container full-width">
+        {/* OHSMS Compliance Section */}
+        <div className="ohsms-section">
+          <div className="section-header">
             <h3>OHSMS Compliance Overview</h3>
+            <Link to="/ohsms-dashboard" className="view-details-link">View details</Link>
+          </div>
+          <div className="ohsms-content">
             <OHSMSComplianceOverview reports={reports} />
           </div>
         </div>
         
-        <div className="chart-row">
-          <div className="chart-container">
-            <h3>Risk Assessment</h3>
-            <RiskHeatmap
-              riskAreas={metrics ? metrics.highRiskAreas : []}
-            />
+        {/* Bottom section with recommendations and recent reports */}
+        <div className="bottom-section">
+          <div className="recommendations-container">
+            <div className="section-header">
+              <h3>Analysis & Recommendations</h3>
+            </div>
+            <AnalysisRecommendations />
           </div>
           
-          <div className="chart-container">
-            <h3>Compliance Status</h3>
-            <ComplianceStatus
-              compliance={metrics ? metrics.complianceStatus : null}
-            />
-          </div>
-          
-          <div className="chart-container">
-            <h3>Recent Reports</h3>
+          <div className="recent-reports-container">
+            <div className="section-header">
+              <h3>Recent Reports</h3>
+              <Link to="/reports" className="view-all-link">View all</Link>
+            </div>
             <RecentReports />
           </div>
-        </div>
-        
-        <div className="dashboard-section full-width">
-          <AnalysisRecommendations />
         </div>
       </div>
     </div>
