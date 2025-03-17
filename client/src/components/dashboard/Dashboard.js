@@ -1,5 +1,4 @@
-// client/src/components/dashboard/Dashboard.js
-import './Dashboard.css';
+// client/src/components/dashboard/Dashboard.js again
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +14,7 @@ import MetricsOverview from './MetricsOverview';
 import IncidentTrends from './IncidentTrends';
 import RecentReports from './RecentReports';
 import OHSMSComplianceOverview from './OHSMSComplianceOverview';
+import './Dashboard.css';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
