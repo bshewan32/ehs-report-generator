@@ -1,6 +1,11 @@
 // client/src/components/dashboard/MetricsOverview.js again
 import React from 'react';
-const { FaArrowUp, FaArrowDown, FaMinus } = window.ReactIcons;
+//const { FaArrowUp, FaArrowDown, FaMinus } = window.ReactIcons;
+
+// With these constant definitions
+const FaArrowUp = () => <span style={{ fontSize: '1em' }}>↑</span>;
+const FaArrowDown = () => <span style={{ fontSize: '1em' }}>↓</span>;
+const FaMinus = () => <span style={{ fontSize: '1em' }}>―</span>;
 
 const MetricsOverview = ({ metrics }) => {
   // Fallback data if metrics is null or undefined
