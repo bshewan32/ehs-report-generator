@@ -1,6 +1,6 @@
 // client/src/components/dashboard/MetricsOverview.js again
 import React from 'react';
-import { FaArrowUp, FaArrowDown, FaMinus } from 'react-icons/fa';
+const { FaArrowUp, FaArrowDown, FaMinus } = window.ReactIcons.fa;
 
 const MetricsOverview = ({ metrics }) => {
   // Fallback data if metrics is null or undefined
