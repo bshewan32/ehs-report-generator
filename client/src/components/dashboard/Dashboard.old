@@ -1,4 +1,4 @@
-/* client/src/components/dashboard/Dashboard.css */
+/* client/src/components/dashboard/Dashboard.css again */
 
 /* Main Dashboard Container */
 .dashboard-container {
@@ -199,130 +199,24 @@
   padding: 1.25rem;
 }
 
-/* Bottom Section with Recommendations and Recent Reports */
+/* Bottom Section */
 .bottom-section {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1.5rem;
-  margin-top: 1.5rem;
 }
 
-.recommendations-container, 
-.recent-reports-container {
+.recommendations-container, .recent-reports-container {
   background: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 100%; /* Ensure consistent height */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Section Content */
-.recommendations-content,
-.recent-reports-content {
-  padding: 1.25rem;
-  flex: 1;
-  overflow: auto; /* Allows scrolling if content is too tall */
-}
-
-/* Analysis and Recommendations styling */
-.analysis-card {
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.analysis-card h4 {
-  color: #1e293b;
-  font-size: 1rem;
-  margin-top: 0;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.analysis-card p,
-.analysis-card ul {
-  margin: 0;
-  color: #64748b;
-  font-size: 0.9rem;
-}
-
-.analysis-card ul {
-  padding-left: 1.5rem;
-}
-
-.analysis-card li {
-  margin-bottom: 0.5rem;
-}
-
-/* Recent Reports styling */
-.report-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.report-item {
-  background: #f8f9fa;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.report-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.report-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.report-name {
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.25rem;
-}
-
-.report-period {
-  font-size: 0.8rem;
-  color: #64748b;
-}
-
-.report-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.report-link {
-  color: #0ea5e9;
-  font-size: 0.85rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.report-link:hover {
-  background-color: rgba(14, 165, 233, 0.1);
-  text-decoration: none;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
   .bottom-section {
     grid-template-columns: 1fr;
-  }
-  
-  .recommendations-container, 
-  .recent-reports-container {
-    margin-bottom: 1.5rem;
   }
 }
 
@@ -414,14 +308,6 @@
   margin-right: 0.25rem;
 }
 
-/* No data and loading states */
-.loading-indicator, .no-data {
-  padding: 2rem;
-  text-align: center;
-  color: #64748b;
-  font-style: italic;
-}
-
 /* Override existing styles for better consistency */
 h1, h2, h3, h4 {
   color: #1e293b;
@@ -429,4 +315,12 @@ h1, h2, h3, h4 {
 
 p {
   color: #64748b;
+}
+
+.report-item {
+  transition: transform 0.15s ease;
+}
+
+.report-item:hover {
+  transform: translateY(-2px);
 }

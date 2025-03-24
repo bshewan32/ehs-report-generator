@@ -1,4 +1,4 @@
-// client/src/components/dashboard/Dashboard.js again
+// client/src/components/dashboard/Dashboard.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -105,7 +105,9 @@ const Dashboard = () => {
             <div className="section-header">
               <h3>Analysis & Recommendations</h3>
             </div>
-            <AnalysisRecommendations />
+            <div className="recommendations-content">
+              <AnalysisRecommendations />
+            </div>
           </div>
           
           <div className="recent-reports-container">
@@ -113,7 +115,9 @@ const Dashboard = () => {
               <h3>Recent Reports</h3>
               <Link to="/reports" className="view-all-link">View all</Link>
             </div>
-            <RecentReports />
+            <div className="recent-reports-content">
+              <RecentReports />
+            </div>
           </div>
         </div>
       </div>
