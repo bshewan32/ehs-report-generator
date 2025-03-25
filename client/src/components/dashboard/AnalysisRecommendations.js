@@ -159,7 +159,6 @@ if (currentReport.compliance) {
   
   return (
     <div className="analysis-container">
-      <h3>Analysis & Recommendations</h3>
       
       <div className="analysis-grid">
         <div className="analysis-card">

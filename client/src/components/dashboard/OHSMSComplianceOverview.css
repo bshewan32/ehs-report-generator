@@ -1,0 +1,205 @@
+/* client/src/components/dashboard/OHSMSComplianceOverview.css */
+
+.ohsms-compliance-container {
+  padding: 0.5rem;
+}
+
+.ohsms-metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ohsms-metric-column {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ohsms-metric-column h4 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.score-value {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+}
+
+.score-progress {
+  width: 80%;
+  height: 16px;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.5s ease;
+}
+
+.progress-fill.high {
+  background-color: #2ecc71;
+}
+
+.progress-fill.medium {
+  background-color: #3498db;
+}
+
+.progress-fill.low {
+  background-color: #f39c12;
+}
+
+.progress-fill.critical {
+  background-color: #e74c3c;
+}
+
+/* OHSMS Details Row */
+.ohsms-details-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ohsms-elements-column, 
+.ohsms-issues-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.ohsms-elements-column h4, 
+.ohsms-issues-column h4 {
+  margin-bottom: 1rem;
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Elements List */
+.elements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.element-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.element-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+.element-score {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* client/src/components/dashboard/OHSMSComplianceOverview.css (continued) */
+
+.score-bar {
+  flex-grow: 1;
+  height: 8px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.score-filled {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.score-value-small {
+  font-weight: 600;
+  font-size: 0.85rem;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Compliance Issues List */
+.compliance-issues-list {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.compliance-issue-item {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Categories chart section */
+.ohsms-categories {
+  margin-top: 2rem;
+}
+
+.ohsms-categories h4 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #1e293b;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Empty and loading states */
+.no-data, .ohsms-compliance-empty {
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+  padding: 2rem 0;
+}
+
+/* Make the component responsive */
+@media (max-width: 768px) {
+  .ohsms-metrics-row, 
+  .ohsms-details-row {
+    flex-direction: column;
+  }
+  
+  .ohsms-metric-column, 
+  .ohsms-elements-column, 
+  .ohsms-issues-column {
+    width: 100%;
+  }
+  
+  .score-container {
+    padding: 1rem 0;
+  }
+  
+  .score-value {
+    font-size: 2.5rem;
+  }
+}

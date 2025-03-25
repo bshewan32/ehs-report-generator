@@ -2,45 +2,42 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getReports } from '../../features/reports/reportSlice';
+import { getRecentReports } from '../../features/reports/reportSlice';
+import Moment from 'react-moment';
 
 const RecentReports = () => {
   const dispatch = useDispatch();
-  const { reports, loading } = useSelector(state => state.reports);
-
+  const { recentReports, loading } = useSelector(state => state.reports);
+  
   useEffect(() => {
-    if (!reports.length) {
-      dispatch(getReports());
-    }
-  }, [dispatch, reports.length]);
-
+    dispatch(getRecentReports());
+  }, [dispatch]);
+  
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading-indicator">Loading recent reports...</div>;
   }
-
-  // Show only the 5 most recent reports
-  const recentReports = reports.slice(0, 5);
-
+  
+  if (!recentReports || recentReports.length === 0) {
+    return <div className="no-data">No recent reports available</div>;
+  }
+  
   return (
-    <div className="recent-reports">
-      {recentReports.length === 0 ? (
-        <p>No recent reports available.</p>
-      ) : (
-        <ul className="report-list">
-          {recentReports.map(report => (
-            <li key={report._id} className="report-item">
-              <span className="report-name">{report.companyName}</span>
-              <span className="report-period">{report.reportPeriod}</span>
-              <Link to={`/reports/view/${report._id}`} className="btn btn-sm">
-                View
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      <Link to="/reports" className="btn btn-outline">
-        View All Reports
-      </Link>
+    <div className="report-list">
+      {recentReports.map(report => (
+        <div key={report._id} className="report-item">
+          <div className="report-info">
+            <div className="report-name">{report.title || 'Untitled Report'}</div>
+            <div className="report-period">
+              <Moment format="MMM D, YYYY">{report.reportDate}</Moment>
+            </div>
+          </div>
+          <div className="report-actions">
+            <Link to={`/reports/${report._id}`} className="report-link">
+              View
+            </Link>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
