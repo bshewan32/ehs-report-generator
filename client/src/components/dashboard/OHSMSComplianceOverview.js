@@ -1,5 +1,5 @@
 // client/src/components/dashboard/OHSMSComplianceOverview.js
-import './OHSMSComplianceOverview.css;'
+import './OHSMSComplianceOverview.css';
 import React, { useEffect, useState } from 'react';
 import { 
   BarChart, Bar, PieChart, Pie, Cell, 
