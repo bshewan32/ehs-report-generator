@@ -1,6 +1,7 @@
 // client/src/features/reports/reportSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, setAuthToken } from '../../utils/setAuthToken';
+import axios from 'axios';
 
 // Get all reports
 export const getReports = createAsyncThunk(
