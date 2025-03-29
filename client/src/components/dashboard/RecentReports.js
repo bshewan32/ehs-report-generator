@@ -46,7 +46,7 @@ const RecentReports = () => {
   
   return (
     <div className="report-list">
-      {recentReports.map(report => (
+      {recentReports.map((report, index) => (
         <div key={report._id || index} className="report-item">
           <div className="report-info">
             <div className="report-name">{report.title || 'Untitled Report'}</div>
