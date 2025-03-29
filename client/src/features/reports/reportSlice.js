@@ -23,6 +23,19 @@ export const getReports = createAsyncThunk(
   }
 );
 
+export const getRecentReports = createAsyncThunk(
+  'reports/getRecent',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get('/api/reports?limit=5');
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+
 // Get single report
 export const getReport = createAsyncThunk(
   'reports/getReport',
@@ -182,6 +195,17 @@ const reportSlice = createSlice({
         state.metrics = action.payload;
       })
       .addCase(getMetricsSummary.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getRecentReports.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getRecentReports.fulfilled, (state, action) => {
+        state.loading = false;
+        state.recentReports = action.payload;
+      })
+      .addCase(getRecentReports.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
