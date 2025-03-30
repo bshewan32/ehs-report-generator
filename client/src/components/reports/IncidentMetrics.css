@@ -1,0 +1,73 @@
+/* client/src/components/reports/IncidentMetrics.css */
+
+.incident-metrics {
+    margin-bottom: 2rem;
+  }
+  
+  .incident-metrics h3 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .metric-card {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .metric-title {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+  }
+  
+  .metric-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  /* Specific colors for incident types */
+  .metric-card:nth-child(1) .metric-value {
+    color: #3498db; /* Near Misses - blue */
+  }
+  
+  .metric-card:nth-child(2) .metric-value {
+    color: #2ecc71; /* First Aid - green */
+  }
+  
+  .metric-card:nth-child(3) .metric-value {
+    color: #f39c12; /* Medical Treatment - orange */
+  }
+  
+  .metric-card:nth-child(4) .metric-value {
+    color: #e74c3c; /* Lost Time - red */
+  }
+  
+  .metric-card:nth-child(5) .metric-value {
+    color: #c0392b; /* Fatalities - dark red */
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+  }

@@ -58,7 +58,6 @@ const ReportView = () => {
   const renderCriticalRiskChart = () => {
     if (!report.criticalRisks) return null;
 
-    // Prepare data for visualization
     const criticalRiskData = Object.entries(report.criticalRisks).map(([key, risk]) => ({
       name: risk.name,
       incidents: risk.incidents || 0,
@@ -110,7 +109,7 @@ const ReportView = () => {
       return null;
     }
     
-    // Count risks by rating
+    
     const riskCounts = report.riskAssessment.reduce((acc, risk) => {
       acc[risk.rating] = (acc[risk.rating] || 0) + 1;
       return acc;
@@ -259,27 +258,32 @@ const ReportView = () => {
       </div>
       
       <div className="report-content">
-        <div className="report-section">
-          <h3>Executive Summary</h3>
+      <div className="report-section">
+  <h3>Executive Summary</h3>
           <div className="summary-grid">
+            {/* Safety Performance card */}
             <div className="summary-card">
               <h4>Safety Performance</h4>
               <div className="metric-group">
                 <div className="metric">
-                  <span className="metric-label">Incidents</span>
-                  <span className="metric-value">{report.metrics.lagging.incidentCount}</span>
+                  <span className="metric-label">Lost Time Injuries</span>
+                  <span className="metric-value">{report.incidents?.filter(i => i.type === 'Lost Time').length || 0}</span>
+                </div>
+                <div className="metric">
+                  <span className="metric-label">Medical Treatment</span>
+                  <span className="metric-value">{report.incidents?.filter(i => i.type === 'Medical Treatment').length || 0}</span>
+                </div>
+                <div className="metric">
+                  <span className="metric-label">First Aid</span>
+                  <span className="metric-value">{report.incidents?.filter(i => i.type === 'First Aid').length || 0}</span>
                 </div>
                 <div className="metric">
                   <span className="metric-label">Near Misses</span>
-                  <span className="metric-value">{report.metrics.lagging.nearMissCount}</span>
-                </div>
-                <div className="metric">
-                  <span className="metric-label">Lost Time</span>
-                  <span className="metric-value">{report.metrics.lagging.lostTimeIncidents}</span>
+                  <span className="metric-value">{report.incidents?.filter(i => i.type === 'Near Miss').length || 0}</span>
                 </div>
               </div>
             </div>
-            
+
             <div className="summary-card">
               <h4>Leading Indicators</h4>
               <div className="metric-group">
@@ -295,14 +299,13 @@ const ReportView = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="summary-card">
               <h4>Compliance Status</h4>
-              <div className={`compliance-status ${
-                report.compliance.status === 'Fully Compliant' ? 'status-green' :
-                report.compliance.status === 'Partially Compliant' ? 'status-amber' :
-                'status-red'
-              }`}>
+              <div className={`compliance-status ${report.compliance.status === 'Fully Compliant' ? 'status-green' :
+                  report.compliance.status === 'Partially Compliant' ? 'status-amber' :
+                    'status-red'
+                }`}>
                 {report.compliance.status}
               </div>
             </div>
@@ -314,63 +317,117 @@ const ReportView = () => {
           {/* Add the metrics chart here */}
           {renderMetricsChart()}
           
-          <div className="metrics-tables">
-            <div className="metrics-table">
-              <h4>Lagging Indicators</h4>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Total Incidents</td>
-                    <td>{report.metrics.lagging.incidentCount}</td>
-                  </tr>
-                  <tr>
-                    <td>Near Misses</td>
-                    <td>{report.metrics.lagging.nearMissCount}</td>
-                  </tr>
-                  <tr>
-                    <td>Lost Time Incidents</td>
-                    <td>{report.metrics.lagging.lostTimeIncidents}</td>
-                  </tr>
-                  <tr>
-                    <td>TRIR</td>
-                    <td>{report.metrics.lagging.totalRecordableIncidentRate?.toFixed(2) || 'N/A'}</td>
-                  </tr>
-                  <tr>
-                    <td>LTIR</td>
-                    <td>{report.metrics.lagging.lostTimeIncidentRate?.toFixed(2) || 'N/A'}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="metrics-table">
-              <h4>Leading Indicators</h4>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>Inspections Completed</td>
-                    <td>{report.metrics.leading.inspectionsCompleted} / {report.metrics.leading.inspectionsPlanned}</td>
-                  </tr>
-                  <tr>
-                    <td>Training Completion</td>
-                    <td>{report.metrics.leading.trainingCompleted}%</td>
-                  </tr>
-                  <tr>
-                    <td>Safety Meetings</td>
-                    <td>{report.metrics.leading.safetyMeetings || 0}</td>
-                  </tr>
-                  <tr>
-                    <td>Safety Observations</td>
-                    <td>{report.metrics.leading.safetyObservations || 0}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div className="metrics-table">
+            <h4>Lagging Indicators</h4>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Total Incidents</td>
+                  <td>{report.incidents?.length || 0}</td>
+                </tr>
+                <tr>
+                  <td>First Aid Cases</td>
+                  <td>{report.incidents?.filter(i => i.type === 'First Aid').length || 0}</td>
+                </tr>
+                <tr>
+                  <td>Medical Treatment Cases</td>
+                  <td>{report.incidents?.filter(i => i.type === 'Medical Treatment').length || 0}</td>
+                </tr>
+                <tr>
+                  <td>Lost Time Injuries</td>
+                  <td>{report.incidents?.filter(i => i.type === 'Lost Time').length || 0}</td>
+                </tr>
+                <tr>
+                  <td>Near Misses</td>
+                  <td>{report.incidents?.filter(i => i.type === 'Near Miss').length || 0}</td>
+                </tr>
+                <tr>
+                  <td>TRIR</td>
+                  <td>{report.metrics.lagging.totalRecordableIncidentRate?.toFixed(2) || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td>LTIR</td>
+                  <td>{report.metrics.lagging.lostTimeIncidentRate?.toFixed(2) || 'N/A'}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="metrics-table">
+            <h4>Leading Indicators</h4>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Inspections Completed</td>
+                  <td>{report.metrics.leading.inspectionsCompleted} / {report.metrics.leading.inspectionsPlanned}</td>
+                </tr>
+                <tr>
+                  <td>Training Completion</td>
+                  <td>{report.metrics.leading.trainingCompleted}%</td>
+                </tr>
+                <tr>
+                  <td>Safety Meetings</td>
+                  <td>{report.metrics.leading.safetyMeetings || 0}</td>
+                </tr>
+                <tr>
+                  <td>Safety Observations</td>
+                  <td>{report.metrics.leading.safetyObservations || 0}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        
+      </div>
+
         <div className="report-section">
-          <h3>Significant Incidents</h3>
+          <h3>Incidents</h3>
+
+          {/* Add Incident Metrics Summary */}
+          <div className="metrics-grid incidents-metrics-grid">
+            <div className="metric-card">
+              <div className="metric-title">Near Misses</div>
+              <div className="metric-value">
+                {report.incidents?.filter(i => i.type === 'Near Miss').length || 0}
+              </div>
+            </div>
+
+            <div className="metric-card">
+              <div className="metric-title">First Aid Cases</div>
+              <div className="metric-value">
+                {report.incidents?.filter(i => i.type === 'First Aid').length || 0}
+              </div>
+            </div>
+
+            <div className="metric-card">
+              <div className="metric-title">Medical Treatment Cases</div>
+              <div className="metric-value">
+                {report.incidents?.filter(i => i.type === 'Medical Treatment').length || 0}
+              </div>
+            </div>
+
+            <div className="metric-card">
+              <div className="metric-title">Lost Time Injuries</div>
+              <div className="metric-value">
+                {report.incidents?.filter(i => i.type === 'Lost Time').length || 0}
+              </div>
+            </div>
+
+            <div className="metric-card">
+              <div className="metric-title">Fatalities</div>
+              <div className="metric-value">
+                {report.incidents?.filter(i => i.type === 'Fatality').length || 0}
+              </div>
+            </div>
+
+            <div className="metric-card">
+              <div className="metric-title">Total Incidents</div>
+              <div className="metric-value">
+                {report.incidents?.length || 0}
+              </div>
+            </div>
+          </div>
+
+          <h4 className="mt-4">Significant Incidents</h4>
           {report.incidents && report.incidents.length > 0 ? (
             <table className="incidents-table">
               <thead>
@@ -406,12 +463,12 @@ const ReportView = () => {
           <h3>Critical Risk Protocols</h3>
           {renderCriticalRiskChart()}
         </div>
-        
+
         <div className="report-section">
           <h3>Risk Assessment</h3>
           {/* Add the risk chart here */}
           {renderRiskChart()}
-          
+
           {report.riskAssessment && report.riskAssessment.length > 0 ? (
             <div className="risk-matrix">
               <table className="risk-table">
@@ -441,21 +498,20 @@ const ReportView = () => {
             <p>No risk assessment data available.</p>
           )}
         </div>
-        
+
         <div className="report-section">
           <h3>Compliance and Regulatory</h3>
           <div className="compliance-section">
             <div className="compliance-status-card">
               <h4>Overall Status</h4>
               <div className={`compliance-indicator ${report.compliance.status === 'Fully Compliant' ? 'status-green' :
-                  report.compliance.status === 'Partially Compliant' ? 'status-amber' :
-                    'status-red'
+                report.compliance.status === 'Partially Compliant' ? 'status-amber' :
+                  'status-red'
                 }`}>
                 {report.compliance.status}
               </div>
             </div>
 
-            {/* Add OHSMS Compliance Section here */}
             {renderOHSMSComplianceSection()}
 
             <div className="compliance-details">

@@ -256,3 +256,57 @@ ul {
     width: 100%;
   }
 }
+/* Add these styles to your existing CSS */
+
+.incidents-metrics-grid {
+  margin-bottom: 2rem;
+}
+
+.incidents-metrics-grid .metric-card:nth-child(1) .metric-value {
+  color: #3498db; /* Near Misses - blue */
+}
+
+.incidents-metrics-grid .metric-card:nth-child(2) .metric-value {
+  color: #2ecc71; /* First Aid - green */
+}
+
+.incidents-metrics-grid .metric-card:nth-child(3) .metric-value {
+  color: #f39c12; /* Medical Treatment - orange */
+}
+
+.incidents-metrics-grid .metric-card:nth-child(4) .metric-value {
+  color: #e74c3c; /* Lost Time - red */
+}
+
+.incidents-metrics-grid .metric-card:nth-child(5) .metric-value {
+  color: #c0392b; /* Fatalities - dark red */
+}
+
+.incidents-metrics-grid .metric-card:nth-child(6) .metric-value {
+  color: #2c3e50; /* Total - dark blue */
+}
+
+/* Make sure these styles are consistent with your existing metric cards */
+.metric-card {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.metric-title {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Add a bit of spacing before the incidents table header */
+h4.mt-4 {
+  margin-top: 1.5rem;
+}

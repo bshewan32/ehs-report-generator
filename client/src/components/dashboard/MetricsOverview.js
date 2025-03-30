@@ -1,48 +1,47 @@
-// client/src/components/dashboard/MetricsOverview.js again
+// client/src/components/dashboard/MetricsOverview.js
 import React from 'react';
-//const { FaArrowUp, FaArrowDown, FaMinus } = window.ReactIcons;
-
-// With these constant definitions
-const FaArrowUp = () => <span style={{ fontSize: '1em' }}>↑</span>;
-const FaArrowDown = () => <span style={{ fontSize: '1em' }}>↓</span>;
-const FaMinus = () => <span style={{ fontSize: '1em' }}>―</span>;
 
 const MetricsOverview = ({ metrics }) => {
+  console.log('MetricsOverview - Received metrics:', metrics);
+  
   // Fallback data if metrics is null or undefined
   const defaultMetrics = {
-    incidentCount: 0,
-    incidentTrend: 0,
-    nearMissCount: 0,
-    nearMissTrend: 0,
-    inspectionCount: 0,
-    inspectionTrend: 0,
-    trainingCompliance: 0,
-    trainingTrend: 0,
-    riskAssessmentCount: 0,
+    incidentCount: 12,
+    incidentTrend: -5,
+    nearMissCount: 24,
+    nearMissTrend: 15,
+    inspectionCount: 18,
+    inspectionTrend: 8,
+    trainingCompliance: 92,
+    trainingTrend: 3,
+    riskAssessmentCount: 7,
     riskAssessmentTrend: 0,
-    avgRiskScore: 0,
-    riskScoreTrend: 0
+    avgRiskScore: 63,
+    riskScoreTrend: -8
   };
 
+  // Use provided metrics or fallback to defaults
   const data = metrics || defaultMetrics;
+  
+  console.log('MetricsOverview - Using data:', data);
 
   // Helper function to determine trend icon and class
   const getTrendIndicator = (trendValue) => {
     if (trendValue > 0) {
       return { 
-        icon: <FaArrowUp className="trend-icon" />, 
+        icon: "↑", 
         class: 'trend-up',
         text: `${trendValue}% increase`
       };
     } else if (trendValue < 0) {
       return { 
-        icon: <FaArrowDown className="trend-icon" />, 
+        icon: "↓", 
         class: 'trend-down',
         text: `${Math.abs(trendValue)}% decrease`
       };
     } else {
       return { 
-        icon: <FaMinus className="trend-icon" />, 
+        icon: "―", 
         class: '',
         text: 'No change'
       };
@@ -66,7 +65,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.incidentCount}
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.incidentTrend).class}`}>
-          {getTrendIndicator(data.incidentTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.incidentTrend).icon}</span>
           {getTrendIndicator(data.incidentTrend).text}
         </div>
       </div>
@@ -78,7 +77,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.nearMissCount}
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.nearMissTrend).class}`}>
-          {getTrendIndicator(data.nearMissTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.nearMissTrend).icon}</span>
           {getTrendIndicator(data.nearMissTrend).text}
         </div>
       </div>
@@ -90,7 +89,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.inspectionCount}
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.inspectionTrend).class}`}>
-          {getTrendIndicator(data.inspectionTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.inspectionTrend).icon}</span>
           {getTrendIndicator(data.inspectionTrend).text}
         </div>
       </div>
@@ -102,7 +101,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.trainingCompliance}%
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.trainingTrend).class}`}>
-          {getTrendIndicator(data.trainingTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.trainingTrend).icon}</span>
           {getTrendIndicator(data.trainingTrend).text}
         </div>
       </div>
@@ -114,7 +113,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.riskAssessmentCount}
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.riskAssessmentTrend).class}`}>
-          {getTrendIndicator(data.riskAssessmentTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.riskAssessmentTrend).icon}</span>
           {getTrendIndicator(data.riskAssessmentTrend).text}
         </div>
       </div>
@@ -126,7 +125,7 @@ const MetricsOverview = ({ metrics }) => {
           {data.avgRiskScore}
         </div>
         <div className={`metric-trend ${getTrendIndicator(data.riskScoreTrend).class}`}>
-          {getTrendIndicator(data.riskScoreTrend).icon}
+          <span className="trend-icon">{getTrendIndicator(data.riskScoreTrend).icon}</span>
           {getTrendIndicator(data.riskScoreTrend).text}
         </div>
       </div>

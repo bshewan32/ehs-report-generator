@@ -713,171 +713,174 @@ const handleSubmit = (e) => {
           </div>
         );
       
-      case 4:
-        return (
-          <div className="form-step">
-            <h2 className="step-title">Incidents</h2>
-            
-            <div className="incidents-section">
-              <h3>Add Incident</h3>
-              <div className="incident-form">
-                <div className="form-row">
-                  <div className="form-group col-md-6">
-                    <label>Incident Type</label>
+        case 4:
+          return (
+            <div className="form-step">
+              <h2 className="step-title">Incidents</h2>
+              
+              {/* Add this new section at the top */}
+              <IncidentMetrics incidents={formData.incidents} />
+              
+              <div className="incidents-section">
+                <h3>Add Incident</h3>
+                <div className="incident-form">
+                  <div className="form-row">
+                    <div className="form-group col-md-6">
+                      <label>Incident Type</label>
+                      <select
+                        name="type"
+                        value={currentIncident.type}
+                        onChange={handleIncidentChange}
+                        className="form-control"
+                      >
+                        <option value="Near Miss">Near Miss</option>
+                        <option value="First Aid">First Aid</option>
+                        <option value="Medical Treatment">Medical Treatment</option>
+                        <option value="Lost Time">Lost Time</option>
+                        <option value="Fatality">Fatality</option>
+                      </select>
+                    </div>
+                    
+                    <div className="form-group col-md-6">
+                      <label>Date</label>
+                      <input
+                        type="date"
+                        name="date"
+                        value={currentIncident.date}
+                        onChange={handleIncidentChange}
+                        className="form-control"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={currentIncident.location}
+                      onChange={handleIncidentChange}
+                      className={`form-control ${errors.incidentLocation ? 'is-invalid' : ''}`}
+                    />
+                    {errors.incidentLocation && <div className="invalid-feedback">{errors.incidentLocation}</div>}
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                      name="description"
+                      value={currentIncident.description}
+                      onChange={handleIncidentChange}
+                      className={`form-control ${errors.incidentDescription ? 'is-invalid' : ''}`}
+                      rows="3"
+                    ></textarea>
+                    {errors.incidentDescription && <div className="invalid-feedback">{errors.incidentDescription}</div>}
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Root Cause</label>
+                    <textarea
+                      name="rootCause"
+                      value={currentIncident.rootCause}
+                      onChange={handleIncidentChange}
+                      className="form-control"
+                      rows="2"
+                    ></textarea>
+                  </div>
+        
+                  <div className="form-group">
+                    <label>Critical Risk Involved</label>
                     <select
-                      name="type"
-                      value={currentIncident.type}
+                      name="criticalRiskInvolved"
+                      value={currentIncident.criticalRiskInvolved}
                       onChange={handleIncidentChange}
                       className="form-control"
                     >
-                      <option value="Near Miss">Near Miss</option>
-                      <option value="First Aid">First Aid</option>
-                      <option value="Medical Treatment">Medical Treatment</option>
-                      <option value="Lost Time">Lost Time</option>
-                      <option value="Fatality">Fatality</option>
+                      <option value="none">None</option>
+                      {Object.keys(formData.criticalRisks).map(riskId => (
+                        <option key={riskId} value={riskId}>
+                          {formData.criticalRisks[riskId].name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   
-                  <div className="form-group col-md-6">
-                    <label>Date</label>
-                    <input
-                      type="date"
-                      name="date"
-                      value={currentIncident.date}
+                  <div className="form-group">
+                    <label>Corrective Actions</label>
+                    <textarea
+                      name="actions"
+                      value={currentIncident.actions}
                       onChange={handleIncidentChange}
                       className="form-control"
-                    />
+                      rows="2"
+                    ></textarea>
                   </div>
-                </div>
-                
-                <div className="form-group">
-                  <label>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={currentIncident.location}
-                    onChange={handleIncidentChange}
-                    className={`form-control ${errors.incidentLocation ? 'is-invalid' : ''}`}
-                  />
-                  {errors.incidentLocation && <div className="invalid-feedback">{errors.incidentLocation}</div>}
-                </div>
-                
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea
-                    name="description"
-                    value={currentIncident.description}
-                    onChange={handleIncidentChange}
-                    className={`form-control ${errors.incidentDescription ? 'is-invalid' : ''}`}
-                    rows="3"
-                  ></textarea>
-                  {errors.incidentDescription && <div className="invalid-feedback">{errors.incidentDescription}</div>}
-                </div>
-                
-                <div className="form-group">
-                  <label>Root Cause</label>
-                  <textarea
-                    name="rootCause"
-                    value={currentIncident.rootCause}
-                    onChange={handleIncidentChange}
-                    className="form-control"
-                    rows="2"
-                  ></textarea>
-                </div>
-
-                <div className="form-group">
-                  <label>Critical Risk Involved</label>
-                  <select
-                    name="criticalRiskInvolved"
-                    value={currentIncident.criticalRiskInvolved}
-                    onChange={handleIncidentChange}
-                    className="form-control"
+                  
+                  <div className="form-group">
+                    <label>Status</label>
+                    <select
+                      name="status"
+                      value={currentIncident.status}
+                      onChange={handleIncidentChange}
+                      className="form-control"
+                    >
+                      <option value="Open">Open</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={addIncident}
+                    className="btn btn-success btn-block"
                   >
-                    <option value="none">None</option>
-                    {Object.keys(formData.criticalRisks).map(riskId => (
-                      <option key={riskId} value={riskId}>
-                        {formData.criticalRisks[riskId].name}
-                      </option>
-                    ))}
-                  </select>
+                    Add Incident
+                  </button>
                 </div>
                 
-                <div className="form-group">
-                  <label>Corrective Actions</label>
-                  <textarea
-                    name="actions"
-                    value={currentIncident.actions}
-                    onChange={handleIncidentChange}
-                    className="form-control"
-                    rows="2"
-                  ></textarea>
-                </div>
-                
-                <div className="form-group">
-                  <label>Status</label>
-                  <select
-                    name="status"
-                    value={currentIncident.status}
-                    onChange={handleIncidentChange}
-                    className="form-control"
-                  >
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
-                  </select>
-                </div>
-                
-                <button
-                  type="button"
-                  onClick={addIncident}
-                  className="btn btn-success btn-block"
-                >
-                  Add Incident
-                </button>
-              </div>
-              
-              <h3 className="mt-4">Incidents</h3>
-              {formData.incidents.length === 0 ? (
-                <p>No incidents reported</p>
-              ) : (
-                <div className="incidents-list">
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Type</th>
-                        <th>Date</th>
-                        <th>Location</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {formData.incidents.map((incident) => (
-                        <tr key={incident._id}>
-                          <td>{incident.type}</td>
-                          <td>{new Date(incident.date).toLocaleDateString()}</td>
-                          <td>{incident.location}</td>
-                          <td>{incident.description}</td>
-                          <td>{incident.status}</td>
-                          <td>
-                            <button
-                              type="button"
-                              onClick={() => removeIncident(incident._id)}
-                              className="btn btn-danger btn-sm"
-                            >
-                              Remove
-                            </button>
-                          </td>
+                <h3 className="mt-4">Incidents</h3>
+                {formData.incidents.length === 0 ? (
+                  <p>No incidents reported</p>
+                ) : (
+                  <div className="incidents-list">
+                    <table className="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Date</th>
+                          <th>Location</th>
+                          <th>Description</th>
+                          <th>Status</th>
+                          <th>Actions</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+                      </thead>
+                      <tbody>
+                        {formData.incidents.map((incident) => (
+                          <tr key={incident._id}>
+                            <td>{incident.type}</td>
+                            <td>{new Date(incident.date).toLocaleDateString()}</td>
+                            <td>{incident.location}</td>
+                            <td>{incident.description}</td>
+                            <td>{incident.status}</td>
+                            <td>
+                              <button
+                                type="button"
+                                onClick={() => removeIncident(incident._id)}
+                                className="btn btn-danger btn-sm"
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        );
+          );
       
       // Modify your case 4 for risk assessment or add this as a new step
       // Case 5: Risk Assessment
@@ -1051,149 +1054,109 @@ case 5:
       // Case 6: Analysis & Recommendations
       // Fixed case 6 and 7 in the renderFormStep function
       case 6:
-        return (
-          <div className="form-step">
-            <h2 className="step-title">OHSMS Compliance</h2>
+  return (
+    <div className="form-step">
+      <h2 className="step-title">OHSMS Compliance</h2>
 
-            <OHSMSCompliance
-              initialData={formData.compliance.ohsms}
-              onDataChange={handleOHSMSComplianceChange}
-            />
+      <OHSMSCompliance
+        initialData={formData.compliance.ohsms}
+        onDataChange={handleOHSMSComplianceChange}
+      />
 
-            <div className="form-group">
-              <label>OHSMS Compliance Score (%)</label>
-              <input
-                type="number"
-                name="compliance.ohsmsScore"
-                value={formData.compliance.ohsmsScore || 0}
-                onChange={handleChange}
-                min="0"
-                max="100"
-                className="form-control"
-              />
-            </div>
+      <div className="form-group">
+        <label>OHSMS Compliance Score (%)</label>
+        <input
+          type="number"
+          name="compliance.ohsmsScore"
+          value={formData.compliance.ohsmsScore || 0}
+          onChange={handleChange}
+          min="0"
+          max="100"
+          className="form-control"
+        />
+      </div>
 
-            <div className="form-group">
-              <label>Key Compliance Categories</label>
-              <div className="compliance-categories">
-                {['Chemical Management', 'Machine Guarding', 'Fall Protection', 'Emergency Preparedness'].map(category => (
-                  <div key={category} className="compliance-category">
-                    <label>{category}</label>
-                    <select
-                      name={`compliance.categories.${category}`}
-                      value={formData.compliance.categories?.[category] || 'compliant'}
-                      onChange={(e) => {
-                        setFormData({
-                          ...formData,
-                          compliance: {
-                            ...formData.compliance,
-                            categories: {
-                              ...(formData.compliance.categories || {}),
-                              [category]: e.target.value
-                            }
-                          }
-                        });
-                      }}
-                      className="form-control"
-                    >
-                      <option value="compliant">Compliant</option>
-                      <option value="partially">Partially Compliant</option>
-                      <option value="non-compliant">Non-Compliant</option>
-                      <option value="not-applicable">Not Applicable</option>
-                    </select>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group col-md-4">
-                <label>Fully Compliant %</label>
-                <input
-                  type="number"
-                  name="compliance.fullyCompliantPercentage"
-                  value={formData.compliance.fullyCompliantPercentage}
-                  onChange={handleChange}
-                  min="0"
-                  max="100"
-                  className="form-control"
-                />
-              </div>
-
-              <div className="form-group col-md-4">
-                <label>In Progress %</label>
-                <input
-                  type="number"
-                  name="compliance.inProgressPercentage"
-                  value={formData.compliance.inProgressPercentage}
-                  onChange={handleChange}
-                  min="0"
-                  max="100"
-                  className="form-control"
-                />
-              </div>
-
-              <div className="form-group col-md-4">
-                <label>Non-Compliant %</label>
-                <input
-                  type="number"
-                  name="compliance.nonCompliantPercentage"
-                  value={formData.compliance.nonCompliantPercentage}
-                  onChange={handleChange}
-                  min="0"
-                  max="100"
-                  className="form-control"
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Current Compliance Issues</label>
-              <textarea
-                name="compliance.complianceIssues"
-                value={Array.isArray(formData.compliance.complianceIssues) ? formData.compliance.complianceIssues.join('\n') : ''}
+      <div className="form-group">
+        <label>Key Compliance Categories</label>
+        <div className="compliance-categories">
+          {['Chemical Management', 'Machine Guarding', 'Fall Protection', 'Emergency Preparedness'].map(category => (
+            <div key={category} className="compliance-category">
+              <label>{category}</label>
+              <select
+                name={`compliance.categories.${category}`}
+                value={formData.compliance.categories?.[category] || 'compliant'}
                 onChange={(e) => {
-                  const issuesArray = e.target.value.split('\n').filter(item => item.trim() !== '');
                   setFormData({
                     ...formData,
                     compliance: {
                       ...formData.compliance,
-                      complianceIssues: issuesArray
+                      categories: {
+                        ...(formData.compliance.categories || {}),
+                        [category]: e.target.value
+                      }
                     }
                   });
                 }}
                 className="form-control"
-                rows="3"
-                placeholder="Enter each compliance issue on a new line (e.g., Machine guarding inspection overdue)"
-              ></textarea>
+              >
+                <option value="compliant">Compliant</option>
+                <option value="partially">Partially Compliant</option>
+                <option value="non-compliant">Non-Compliant</option>
+                <option value="not-applicable">Not Applicable</option>
+              </select>
             </div>
+          ))}
+        </div>
+      </div>
 
-            <div className="form-group mt-4">
-              <label>Upcoming Regulations</label>
-              <textarea
-                name="compliance.upcomingRegulations"
-                value={formData.compliance.upcomingRegulations}
-                onChange={handleChange}
-                className="form-control"
-                rows="3"
-                placeholder="Describe any upcoming regulatory changes that may impact operations..."
-              ></textarea>
-            </div>
+      {/* Removed the percentage fields that were here */}
 
-            <div className="form-group">
-              <label>Compliance Actions</label>
-              <textarea
-                name="compliance.complianceActions"
-                value={formData.compliance.complianceActions}
-                onChange={handleChange}
-                className="form-control"
-                rows="3"
-                placeholder="Describe actions being taken to address compliance issues..."
-              ></textarea>
-            </div>
-          </div>
-        );
+      <div className="form-group">
+        <label>Current Compliance Issues</label>
+        <textarea
+          name="compliance.complianceIssues"
+          value={Array.isArray(formData.compliance.complianceIssues) ? formData.compliance.complianceIssues.join('\n') : ''}
+          onChange={(e) => {
+            const issuesArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+            setFormData({
+              ...formData,
+              compliance: {
+                ...formData.compliance,
+                complianceIssues: issuesArray
+              }
+            });
+          }}
+          className="form-control"
+          rows="3"
+          placeholder="Enter each compliance issue on a new line (e.g., Machine guarding inspection overdue)"
+        ></textarea>
+      </div>
 
+      <div className="form-group mt-4">
+        <label>Upcoming Regulations</label>
+        <textarea
+          name="compliance.upcomingRegulations"
+          value={formData.compliance.upcomingRegulations}
+          onChange={handleChange}
+          className="form-control"
+          rows="3"
+          placeholder="Describe any upcoming regulatory changes that may impact operations..."
+        ></textarea>
+      </div>
+
+      <div className="form-group">
+        <label>Compliance Actions</label>
+        <textarea
+          name="compliance.complianceActions"
+          value={formData.compliance.complianceActions}
+          onChange={handleChange}
+          className="form-control"
+          rows="3"
+          placeholder="Describe actions being taken to address compliance issues..."
+        ></textarea>
+      </div>
+    </div>
+  );
       // Case 7 fixed - removing the unreachable code that appears after the case block
 case 7:
   return (
