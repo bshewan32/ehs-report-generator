@@ -90,12 +90,46 @@ export const deleteReport = createAsyncThunk(
 );
 
 // Get metrics summary
+// Get metrics summary
 export const getMetricsSummary = createAsyncThunk(
   'reports/getMetricsSummary',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
       const res = await api.get('/api/reports/metrics/summary');
-      return res.data;
+      
+      // Get all reports from state to calculate additional metrics
+      const { reports } = getState().reports;
+      
+      // Calculate incident counts from reports if they exist
+      let additionalMetrics = {};
+      if (reports && reports.length > 0) {
+        const incidentCounts = reports.reduce((acc, report) => {
+          if (report.incidents && report.incidents.length > 0) {
+            report.incidents.forEach(incident => {
+              if (incident.type === 'First Aid') acc.firstAidCount++;
+              if (incident.type === 'Medical Treatment') acc.medicalTreatmentCount++;
+              if (incident.type === 'Near Miss') acc.nearMissCount++;
+              if (incident.type === 'Lost Time') acc.lostTimeCount++;
+              if (incident.type === 'Fatality') acc.fatalityCount++;
+            });
+          }
+          return acc;
+        }, {
+          firstAidCount: 0,
+          medicalTreatmentCount: 0,
+          nearMissCount: 0,
+          lostTimeCount: 0,
+          fatalityCount: 0
+        });
+        
+        additionalMetrics = incidentCounts;
+      }
+      
+      // Combine API metrics with calculated metrics
+      return {
+        ...res.data,
+        ...additionalMetrics
+      };
     } catch (err) {
       return rejectWithValue(err.response?.data?.msg || 'Error fetching metrics');
     }
@@ -133,6 +167,34 @@ const reportSlice = createSlice({
         // Handle both array and object with reports property
         state.reports = Array.isArray(action.payload) ? action.payload :
           (action.payload.reports || []);
+          if (state.reports.length > 0) {
+            const incidentCounts = state.reports.reduce((acc, report) => {
+              if (report.incidents && report.incidents.length > 0) {
+                report.incidents.forEach(incident => {
+                  if (incident.type === 'First Aid') acc.firstAidCount++;
+                  if (incident.type === 'Medical Treatment') acc.medicalTreatmentCount++;
+                  if (incident.type === 'Near Miss') acc.nearMissCount++;
+                  if (incident.type === 'Lost Time') acc.lostTimeCount++;
+                  if (incident.type === 'Fatality') acc.fatalityCount++;
+                });
+              }
+              return acc;
+            }, {
+              firstAidCount: 0,
+              medicalTreatmentCount: 0,
+              nearMissCount: 0,
+              lostTimeCount: 0,
+              fatalityCount: 0
+            });if (!state.metrics) {
+              state.metrics = incidentCounts;
+            } else {
+              state.metrics = {
+                ...state.metrics,
+                ...incidentCounts
+              };
+            }
+          }
+      
       })
       .addCase(getReports.rejected, (state, action) => {
         state.loading = false;

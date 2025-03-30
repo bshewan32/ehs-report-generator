@@ -1,4 +1,3 @@
-// client/src/components/dashboard/Dashboard.js again
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +15,9 @@ import RecentReports from './RecentReports';
 import OHSMSComplianceOverview from './OHSMSComplianceOverview';
 import './Dashboard.css';
 
+// Remove this line - it's causing the duplicate declaration
+// const { metrics, reports, loading } = useSelector(state => state.reports);
+
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { metrics, reports, loading } = useSelector(state => state.reports);
@@ -25,6 +27,26 @@ const Dashboard = () => {
     dispatch(getMetricsSummary());
     dispatch(getReports()); // Fetch all reports for OHSMS data
   }, [dispatch]);
+  
+  // Calculate incident metrics from reports
+  const calculateIncidentMetrics = () => {
+    if (!reports || reports.length === 0) return {};
+    
+    return reports.reduce((acc, report) => {
+      if (report.incidents && report.incidents.length > 0) {
+        report.incidents.forEach(incident => {
+          if (incident.type === 'First Aid') acc.firstAidCount = (acc.firstAidCount || 0) + 1;
+          if (incident.type === 'Medical Treatment') acc.medicalTreatmentCount = (acc.medicalTreatmentCount || 0) + 1;
+          if (incident.type === 'Near Miss') acc.nearMissCount = (acc.nearMissCount || 0) + 1;
+          if (incident.type === 'Lost Time') acc.lostTimeCount = (acc.lostTimeCount || 0) + 1;
+        });
+      }
+      return acc;
+    }, {});
+  };
+  
+  // Get the calculated incident metrics
+  const incidentMetrics = calculateIncidentMetrics();
   
   if (loading) {
     return (
@@ -51,7 +73,7 @@ const Dashboard = () => {
           </Link>
         </div>
       </div>
-      
+            
       <div className="welcome-card">
         <div className="welcome-content">
           <h2>Welcome, {user && user.name}</h2>
@@ -61,7 +83,7 @@ const Dashboard = () => {
       
       {/* Improved Metrics Overview Section with better styling */}
       <div className="dashboard-metrics-cards">
-        <MetricsOverview metrics={metrics} />
+        <MetricsOverview metrics={{...metrics, ...incidentMetrics}} />
       </div>
       
       <div className="dashboard-main-content">
