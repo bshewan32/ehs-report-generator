@@ -6,6 +6,7 @@ import { createReport, getReport, updateReport } from '../../features/reports/re
 import TrainingCompliance from './TrainingCompliance';
 import OHSMSCompliance from './OHSMSCompliance';
 import AssessmentRecommendations from './AssessmentRecommendations';
+import IncidentMetrics from './IncidentMetrics';
 
 // This component will be fleshed out with better UI elements and more comprehensive fields
 

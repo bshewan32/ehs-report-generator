@@ -582,7 +582,7 @@ const ReportView = () => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 
