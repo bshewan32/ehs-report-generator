@@ -38,9 +38,9 @@ const IncidentMetrics = ({ incidents = [] }) => {
           break;
       }
     });
-
+    
     console.log('IncidentMetrics received incidents:', incidents);
-    console.log('Calculated metrics:', metrics);
+    console.log('Calculated metrics:', counts); // Changed from metrics to counts
     
     // Calculate recordable incident rate (if we had hours worked)
     // TRIR = (Recordable incidents × 200,000) ÷ Hours worked

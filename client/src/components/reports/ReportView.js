@@ -379,53 +379,54 @@ const ReportView = () => {
         </div>
       </div>
 
-        <div className="report-section">
-          <h3>Incidents</h3>
+      <div className="report-section">
+        <h3>Incidents</h3>
+          // In the Incidents section of ReportView.js
+        // Add this before the incidents table
 
-          {/* Add Incident Metrics Summary */}
-          <div className="metrics-grid incidents-metrics-grid">
-            <div className="metric-card">
-              <div className="metric-title">Near Misses</div>
-              <div className="metric-value">
-                {report.incidents?.filter(i => i.type === 'Near Miss').length || 0}
-              </div>
-            </div>
-
-            <div className="metric-card">
-              <div className="metric-title">First Aid Cases</div>
-              <div className="metric-value">
-                {report.incidents?.filter(i => i.type === 'First Aid').length || 0}
-              </div>
-            </div>
-
-            <div className="metric-card">
-              <div className="metric-title">Medical Treatment Cases</div>
-              <div className="metric-value">
-                {report.incidents?.filter(i => i.type === 'Medical Treatment').length || 0}
-              </div>
-            </div>
-
-            <div className="metric-card">
-              <div className="metric-title">Lost Time Injuries</div>
-              <div className="metric-value">
-                {report.incidents?.filter(i => i.type === 'Lost Time').length || 0}
-              </div>
-            </div>
-
-            <div className="metric-card">
-              <div className="metric-title">Fatalities</div>
-              <div className="metric-value">
-                {report.incidents?.filter(i => i.type === 'Fatality').length || 0}
-              </div>
-            </div>
-
-            <div className="metric-card">
-              <div className="metric-title">Total Incidents</div>
-              <div className="metric-value">
-                {report.incidents?.length || 0}
-              </div>
+        <div className="metrics-grid incidents-metrics-grid">
+          <div className="metric-card">
+            <div className="metric-title">Near Misses</div>
+            <div className="metric-value">
+              {report.incidents?.filter(i => i.type === 'Near Miss').length || 0}
             </div>
           </div>
+
+          <div className="metric-card">
+            <div className="metric-title">First Aid Cases</div>
+            <div className="metric-value">
+              {report.incidents?.filter(i => i.type === 'First Aid').length || 0}
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-title">Medical Treatment Cases</div>
+            <div className="metric-value">
+              {report.incidents?.filter(i => i.type === 'Medical Treatment').length || 0}
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-title">Lost Time Injuries</div>
+            <div className="metric-value">
+              {report.incidents?.filter(i => i.type === 'Lost Time').length || 0}
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-title">Fatalities</div>
+            <div className="metric-value">
+              {report.incidents?.filter(i => i.type === 'Fatality').length || 0}
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-title">Total Incidents</div>
+            <div className="metric-value">
+              {report.incidents?.length || 0}
+            </div>
+          </div>
+        </div>
 
           <h4 className="mt-4">Significant Incidents</h4>
           {report.incidents && report.incidents.length > 0 ? (

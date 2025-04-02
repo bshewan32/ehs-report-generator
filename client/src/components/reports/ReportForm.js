@@ -30,6 +30,8 @@ const [formData, setFormData] = useState({
       incidentCount: 0,
       nearMissCount: 0,
       lostTimeIncidents: 0,
+      firstAidCases: 0,        // Add this field
+      medicalTreatmentCases: 0, // Add this field
       totalRecordableIncidentRate: 0,
       lostTimeIncidentRate: 0,
       severityRate: 0
@@ -457,6 +459,18 @@ const [formData, setFormData] = useState({
     }
   };
 
+  const calculateMetricsFromIncidents = () => {
+    // Calculate metrics based on incidents
+    const incidentCounts = {
+      incidentCount: formData.incidents.length,
+      nearMissCount: formData.incidents.filter(i => i.type === 'Near Miss').length,
+      lostTimeIncidents: formData.incidents.filter(i => i.type === 'Lost Time').length,
+      firstAidCases: formData.incidents.filter(i => i.type === 'First Aid').length,
+      medicalTreatmentCases: formData.incidents.filter(i => i.type === 'Medical Treatment').length,
+    };
+    
+    return incidentCounts;
+  };
   
   // Form submission
 const handleSubmit = (e) => {
@@ -466,13 +480,29 @@ const handleSubmit = (e) => {
   if (!validateStep(step)) {
     return;
   }
+
+  const incidentMetrics = calculateMetricsFromIncidents();
+  
+  // Update the metrics in the form data
+  const updatedFormData = {
+    ...formData,
+    metrics: {
+      ...formData.metrics,
+      lagging: {
+        ...formData.metrics.lagging,
+        ...incidentMetrics
+      }
+    }
+  };
   
   // Clean up the data before sending to the server
   const cleanedFormData = {
-    ...formData,
-    incidents: formData.incidents.map(({ _id, ...rest }) => rest), // Remove temporary _id fields
-    riskAssessment: formData.riskAssessment.map(({ _id, ...rest }) => rest) // Remove temporary _id fields
+    ...updatedFormData,
+    incidents: updatedFormData.incidents.map(({ _id, ...rest }) => rest), // Remove temporary _id fields
+    riskAssessment: updatedFormData.riskAssessment.map(({ _id, ...rest }) => rest) // Remove temporary _id fields
   };
+  
+  console.log('Submitting form with data:', cleanedFormData);
   
   if (isEditing) {
     dispatch(updateReport({ id, formData: cleanedFormData }));
