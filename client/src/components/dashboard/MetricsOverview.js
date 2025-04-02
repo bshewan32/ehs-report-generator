@@ -82,6 +82,30 @@ const MetricsOverview = ({ metrics }) => {
         </div>
       </div>
 
+      {/* Lagging Indicators - First Aid Cases */}
+      <div className="metric-card">
+        <div className="metric-title">First Aid Cases</div>
+        <div className={`metric-value ${getMetricClass(data.firstAidCount, data.firstAidTrend || 0, false)}`}>
+          {data.firstAidCount || 0}
+        </div>
+        <div className="metric-trend neutral">
+          <span className="trend-icon">―</span>
+          No trend data
+        </div>
+      </div>
+
+      {/* Lagging Indicators - Medical Treatment Cases */}
+      <div className="metric-card">
+        <div className="metric-title">Medical Treatments</div>
+        <div className={`metric-value ${getMetricClass(data.medicalTreatmentCount, data.medicalTreatmentTrend || 0, false)}`}>
+          {data.medicalTreatmentCount || 0}
+        </div>
+        <div className="metric-trend neutral">
+          <span className="trend-icon">―</span>
+          No trend data
+        </div>
+      </div>
+
       {/* Leading Indicators - Inspections */}
       <div className="metric-card">
         <div className="metric-title">Inspections (YTD)</div>

@@ -603,7 +603,28 @@ const handleSubmit = (e) => {
                   />
                   {errors.nearMissCount && <div className="invalid-feedback">{errors.nearMissCount}</div>}
                 </div>
-                
+                <div className="form-group">
+                  <label>First Aid Cases</label>
+                  <input
+                    type="number"
+                    name="lagging.firstAidCases"
+                    value={formData.metrics.lagging.firstAidCases}
+                    onChange={handleMetricsChange}
+                    min="0"
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Medical Treatment Cases</label>
+                  <input
+                    type="number"
+                    name="lagging.medicalTreatmentCases"
+                    value={formData.metrics.lagging.medicalTreatmentCases}
+                    onChange={handleMetricsChange}
+                    min="0"
+                    className="form-control"
+                  />
+                </div>
                 <div className="form-group">
                   <label>Lost Time Incidents</label>
                   <input

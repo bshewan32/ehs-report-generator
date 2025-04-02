@@ -88,6 +88,8 @@ const ReportSchema = new Schema({
     lagging: {
       incidentCount: Number,
       nearMissCount: Number,
+      firstAidCount: Number,
+      medicalTreatmentCount: Number,
       lostTimeIncidents: Number,
       totalRecordableIncidentRate: Number,
       lostTimeIncidentRate: Number,

@@ -1,4 +1,3 @@
-// client/src/components/dashboard/IncidentTrends.js
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -32,7 +31,9 @@ const IncidentTrends = () => {
       period: report.reportPeriod,
       incidents: report.metrics?.lagging?.incidentCount || 0,
       nearMisses: report.metrics?.lagging?.nearMissCount || 0,
-      lostTime: report.metrics?.lagging?.lostTimeIncidents || 0
+      lostTime: report.metrics?.lagging?.lostTimeIncidents || 0,
+      firstAid: report.metrics?.lagging?.firstAidCases || 0,
+      medicalTreatment: report.metrics?.lagging?.medicalTreatmentCases || 0
     }));
   };
 
@@ -51,6 +52,8 @@ const IncidentTrends = () => {
             <Line type="monotone" dataKey="incidents" stroke="#8884d8" name="Incidents" />
             <Line type="monotone" dataKey="nearMisses" stroke="#82ca9d" name="Near Misses" />
             <Line type="monotone" dataKey="lostTime" stroke="#ff7300" name="Lost Time" />
+            <Line type="monotone" dataKey="firstAid" stroke="#00c49f" name="First Aid" />
+            <Line type="monotone" dataKey="medicalTreatment" stroke="#ff69b4" name="Medical Treatment" />
           </LineChart>
         </ResponsiveContainer>
       ) : (

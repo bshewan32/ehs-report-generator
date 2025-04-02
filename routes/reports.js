@@ -167,6 +167,8 @@ router.get('/metrics/summary', auth, async (req, res) => {
       totalReports: reports.length,
       totalIncidents: reports.reduce((sum, report) => sum + (report.metrics?.lagging?.incidentCount || 0), 0),
       totalNearMisses: reports.reduce((sum, report) => sum + (report.metrics?.lagging?.nearMissCount || 0), 0),
+      totalFirstAidCases: reports.reduce((sum, report) => sum + (report.metrics?.lagging?.firstAidCount || 0), 0),
+      totalMedicalTreatments: reports.reduce((sum, report) => sum + (report.metrics?.lagging?.medicalTreatmentCount || 0), 0),
       totalLostTimeIncidents: reports.reduce((sum, report) => sum + (report.metrics?.lagging?.lostTimeIncidents || 0), 0),
       inspectionCompletion: calculateInspectionCompletion(reports),
       trainingCompletion: calculateTrainingCompletion(reports),
