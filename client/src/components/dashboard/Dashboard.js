@@ -14,9 +14,18 @@ import IncidentTrends from './IncidentTrends';
 import RecentReports from './RecentReports';
 import OHSMSComplianceOverview from './OHSMSComplianceOverview';
 import './Dashboard.css';
+import KPITracker from '../kpi/KPITracker';
+import { syncMetricsWithKPI, enhanceMetricsWithKPI } from './DashboardHelpers';
 
-// Remove this line - it's causing the duplicate declaration
-// const { metrics, reports, loading } = useSelector(state => state.reports);
+// Get the calculated incident metrics
+const incidentMetrics = calculateIncidentMetrics();
+  
+// Enhance metrics with KPI data
+const enhancedMetrics = enhanceMetricsWithKPI(metrics);
+
+// Update metrics overview component reference with enhanced metrics
+const displayMetrics = { ...enhancedMetrics, ...incidentMetrics };
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -87,6 +96,27 @@ const Dashboard = () => {
       </div>
       
       <div className="dashboard-main-content">
+        {/* First row of charts */}
+        <div className="kpi-dashboard-section">
+          <div className="section-header">
+            <h3>Key Performance Indicators</h3>
+            <span className="kpi-period">{new Date().getFullYear()}</span>
+          </div>
+          <div className="kpi-dashboard-content">
+            {metrics && metrics.kpis && metrics.kpis.length > 0 ? (
+              <KPITracker 
+                kpiData={metrics.kpis}
+                editMode={false}
+                year={new Date().getFullYear()}
+              />
+            ) : (
+              <div className="no-kpi-data">
+                <p>No KPI data available. Create reports with KPI data to see performance tracking.</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
         {/* First row of charts */}
         <div className="charts-container">
           <div className="chart-item">

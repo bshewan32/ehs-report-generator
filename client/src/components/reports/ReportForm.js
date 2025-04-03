@@ -7,6 +7,8 @@ import TrainingCompliance from './TrainingCompliance';
 import OHSMSCompliance from './OHSMSCompliance';
 import AssessmentRecommendations from './AssessmentRecommendations';
 import IncidentMetrics from './IncidentMetrics';
+import KPITracker from '../kpi/KPITracker';
+import c from 'config';
 
 // This component will be fleshed out with better UI elements and more comprehensive fields
 
@@ -19,8 +21,8 @@ const ReportForm = () => {
   const { report, loading, error } = useSelector(state => state.reports);
   const { user } = useSelector(state => state.auth);
 
-  // Initial form data state
-  // Initial form data state
+  
+// Initial form data state
 const [formData, setFormData] = useState({
   companyName: '',
   reportPeriod: '',
@@ -46,6 +48,41 @@ const [formData, setFormData] = useState({
       hazardsClosed: 0
     }
   },
+  kpis: [
+    {
+      id: 'nearMissRate',
+      name: 'Near Miss Reporting Rate',
+      description: 'Number of near misses reported per 100,000 hours worked',
+      target: 10,
+      actual: 0,
+      unit: 'per 100K hrs',
+      year: new Date().getFullYear(),
+      hoursWorked: 0,
+      nearMissCount: 0
+    },
+    {
+      id: 'criticalRiskVerification',
+      name: 'Critical Risk Verification',
+      description: 'Percentage of critical risk tasks verified with appropriate controls',
+      target: 100,
+      actual: 0,
+      unit: '%',
+      year: new Date().getFullYear(),
+      totalTasks: 0,
+      verifiedTasks: 0
+    },
+    {
+      id: 'electricalSafetyCompliance',
+      name: 'Electrical Safety Compliance',
+      description: 'Percentage compliance with LOTO, work permits and PPE requirements',
+      target: 100,
+      actual: 0,
+      unit: '%',
+      year: new Date().getFullYear(),
+      auditItems: 0,
+      compliantItems: 0
+    }
+  ],
   criticalRisks: {
     cr1: { name: 'Working at Heights', status: 'effective', changes: '', incidents: 0 },
     cr2: { name: 'Vehicle Operations', status: 'effective', changes: '', incidents: 0 },
@@ -104,16 +141,38 @@ const [formData, setFormData] = useState({
   historicalData: []
 });
 
-  const handleOHSMSComplianceChange = (ohsmsData) => {
-    setFormData({
-      ...formData,
-      compliance: {
-        ...formData.compliance,
-        ohsms: ohsmsData,
-        ohsmsScore: ohsmsData.overallScore
+const handleOHSMSComplianceChange = (ohsmsData) => {
+  setFormData({
+    ...formData,
+    compliance: {
+      ...formData.compliance,
+      ohsms: ohsmsData,
+      ohsmsScore: ohsmsData.overallScore
+    }
+  });
+};
+
+const handleKPIChange = (updatedKPIs) => {
+  setFormData({
+    ...formData,
+    kpis: updatedKPIs
+  });
+  
+  // Update near miss count in metrics to match KPI data if available
+  const nearMissKPI = updatedKPIs.find(kpi => kpi.id === 'nearMissRate');
+  if (nearMissKPI && nearMissKPI.nearMissCount) {
+    setFormData(prev => ({
+      ...prev,
+      metrics: {
+        ...prev.metrics,
+        lagging: {
+          ...prev.metrics.lagging,
+          nearMissCount: nearMissKPI.nearMissCount
+        }
       }
-    });
-  };
+    }));
+  }
+};
   
   const handleAssessmentChange = (assessmentData) => {
     setFormData({
@@ -159,7 +218,7 @@ const [formData, setFormData] = useState({
   // Form step state
   const [step, setStep] = useState(1);
   // Total number of steps
-  const totalSteps = 7;
+  const totalSteps = 8;
   
   // Form validation state
   const [errors, setErrors] = useState({});
@@ -936,113 +995,113 @@ const handleSubmit = (e) => {
       
       // Modify your case 4 for risk assessment or add this as a new step
       // Case 5: Risk Assessment
-case 5:
-  return (
-    <div className="form-step">
-      <h2 className="step-title">Risk Assessment</h2>
+      case 5:
+        return (
+          <div className="form-step">
+            <h2 className="step-title">Risk Assessment</h2>
 
-      {/* Risk assessment form */}
-      <div className="risk-section">
-        <h3>Add Risk Area</h3>
-        <div className="risk-form">
-          <div className="form-group">
-            <label>Risk Area</label>
-            <input
-              type="text"
-              name="risk"
-              value={currentRisk.risk}
-              onChange={handleRiskChange}
-              className={`form-control ${errors.riskArea ? 'is-invalid' : ''}`}
-              placeholder="e.g., Chemical Exposure, Fall Hazard"
-            />
-            {errors.riskArea && <div className="invalid-feedback">{errors.riskArea}</div>}
-          </div>
-          
-          <div className="form-row">
-            <div className="form-group col-md-6">
-              <label>Probability (1-5)</label>
-              <input
-                type="number"
-                name="probability"
-                value={currentRisk.probability}
-                onChange={handleRiskChange}
-                min="1"
-                max="5"
-                className="form-control"
-              />
+            {/* Risk assessment form */}
+            <div className="risk-section">
+              <h3>Add Risk Area</h3>
+              <div className="risk-form">
+                <div className="form-group">
+                  <label>Risk Area</label>
+                  <input
+                    type="text"
+                    name="risk"
+                    value={currentRisk.risk}
+                    onChange={handleRiskChange}
+                    className={`form-control ${errors.riskArea ? 'is-invalid' : ''}`}
+                    placeholder="e.g., Chemical Exposure, Fall Hazard"
+                  />
+                  {errors.riskArea && <div className="invalid-feedback">{errors.riskArea}</div>}
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group col-md-6">
+                    <label>Probability (1-5)</label>
+                    <input
+                      type="number"
+                      name="probability"
+                      value={currentRisk.probability}
+                      onChange={handleRiskChange}
+                      min="1"
+                      max="5"
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label>Severity (1-5)</label>
+                    <input
+                      type="number"
+                      name="severity"
+                      value={currentRisk.severity}
+                      onChange={handleRiskChange}
+                      min="1"
+                      max="5"
+                      className="form-control"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Risk Rating</label>
+                  <input
+                    type="text"
+                    value={currentRisk.rating}
+                    className="form-control"
+                    readOnly
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addRisk}
+                  className="btn btn-success btn-block"
+                >
+                  Add Risk
+                </button>
+              </div>
+
+              <h3 className="mt-4">Identified Risks</h3>
+              {formData.riskAssessment.length === 0 ? (
+                <p>No risks identified</p>
+              ) : (
+                <div className="risks-list">
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Risk Area</th>
+                        <th>Probability</th>
+                        <th>Severity</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {formData.riskAssessment.map((risk) => (
+                        <tr key={risk._id}>
+                          <td>{risk.risk}</td>
+                          <td>{risk.probability}</td>
+                          <td>{risk.severity}</td>
+                          <td>{risk.rating}</td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => removeRisk(risk._id)}
+                              className="btn btn-danger btn-sm"
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
-            
-            <div className="form-group col-md-6">
-              <label>Severity (1-5)</label>
-              <input
-                type="number"
-                name="severity"
-                value={currentRisk.severity}
-                onChange={handleRiskChange}
-                min="1"
-                max="5"
-                className="form-control"
-              />
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label>Risk Rating</label>
-            <input
-              type="text"
-              value={currentRisk.rating}
-              className="form-control"
-              readOnly
-            />
-          </div>
-          
-          <button
-            type="button"
-            onClick={addRisk}
-            className="btn btn-success btn-block"
-          >
-            Add Risk
-          </button>
-        </div>
-        
-        <h3 className="mt-4">Identified Risks</h3>
-        {formData.riskAssessment.length === 0 ? (
-          <p>No risks identified</p>
-        ) : (
-          <div className="risks-list">
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Risk Area</th>
-                  <th>Probability</th>
-                  <th>Severity</th>
-                  <th>Rating</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.riskAssessment.map((risk) => (
-                  <tr key={risk._id}>
-                    <td>{risk.risk}</td>
-                    <td>{risk.probability}</td>
-                    <td>{risk.severity}</td>
-                    <td>{risk.rating}</td>
-                    <td>
-                      <button
-                        type="button"
-                        onClick={() => removeRisk(risk._id)}
-                        className="btn btn-danger btn-sm"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
 
       {/* Critical Risk Protocols section */}
       <div className="critical-risks-section">
@@ -1209,150 +1268,175 @@ case 5:
       </div>
     </div>
   );
-      // Case 7 fixed - removing the unreachable code that appears after the case block
-case 7:
-  return (
-    <div className="form-step">
-      <h2 className="step-title">Assessment & Recommendations</h2>
       
-      <AssessmentRecommendations
-        reportData={formData}
-        onAssessmentChange={handleAssessmentChange}
-      />
       
-      <hr className="section-divider mt-5" />
-      
-      <h3>Safety Initiatives</h3>
-      
-      <div className="form-group">
-        <label>Current Safety Initiatives</label>
-        <textarea
-          name="safetyInitiatives.current"
-          value={formData.safetyInitiatives.current}
-          onChange={handleChange}
-          className="form-control"
-          rows="3"
-          placeholder="Describe current safety programs and initiatives..."
-        ></textarea>
-      </div>
 
-      <div className="form-group">
-        <label>Upcoming Safety Initiatives (one per line)</label>
-        <textarea
-          name="safetyInitiatives.upcoming"
-          value={Array.isArray(formData.safetyInitiatives.upcoming) ? formData.safetyInitiatives.upcoming.join('\n') : ''}
-          onChange={(e) => {
-            const upcomingArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              safetyInitiatives: {
-                ...formData.safetyInitiatives,
-                upcoming: upcomingArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each upcoming safety initiative on a new line..."
-        ></textarea>
-      </div>
-      
-      <hr className="section-divider" />
-      
-      <h3>Additional Analysis</h3>
-      
-      <div className="form-group">
-        <label>Trends (one per line)</label>
-        <textarea
-          name="analysis.trends"
-          value={Array.isArray(formData.analysis.trends) ? formData.analysis.trends.join('\n') : ''}
-          onChange={(e) => {
-            const trendsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              analysis: {
-                ...formData.analysis,
-                trends: trendsArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each trend on a new line..."
-        ></textarea>
-      </div>
+      case 7:
+        return (
+          <div className="form-step">
+            <h2 className="step-title">Key Performance Indicators</h2>
 
-      <div className="form-group">
-        <label>Positive Observations (one per line)</label>
-        <textarea
-          name="analysis.positiveObservations"
-          value={Array.isArray(formData.analysis.positiveObservations) ? formData.analysis.positiveObservations.join('\n') : ''}
-          onChange={(e) => {
-            const observationsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              analysis: {
-                ...formData.analysis,
-                positiveObservations: observationsArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each positive observation on a new line..."
-        ></textarea>
-      </div>
+            <div className="kpi-form-section">
+              <p className="kpi-instructions">
+                Track yearly KPI targets and performance. Enter your data for each KPI below.
+              </p>
 
-      <div className="form-group">
-        <label>Areas of Concern (one per line)</label>
-        <textarea
-          name="analysis.concernAreas"
-          value={Array.isArray(formData.analysis.concernAreas) ? formData.analysis.concernAreas.join('\n') : ''}
-          onChange={(e) => {
-            const concernsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              analysis: {
-                ...formData.analysis,
-                concernAreas: concernsArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each area of concern on a new line..."
-        ></textarea>
-      </div>
-      
-      <div className="form-group">
-        <label>Recommendations (one per line)</label>
-        <textarea
-          name="analysis.recommendations"
-          value={Array.isArray(formData.analysis.recommendations) ? formData.analysis.recommendations.join('\n') : ''}
-          onChange={(e) => {
-            const recommendationsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
-            setFormData({
-              ...formData,
-              analysis: {
-                ...formData.analysis,
-                recommendations: recommendationsArray
-              }
-            });
-          }}
-          className="form-control"
-          rows="3"
-          placeholder="Enter each recommendation on a new line..."
-        ></textarea>
-      </div>
-    </div>
-  );
+              <KPITracker
+                kpiData={formData.kpis}
+                onKPIChange={handleKPIChange}
+                editMode={true}
+                year={new Date().getFullYear()}
+              />
+            </div>
+          </div>
+        );
 
-        default:
-        return null;
+      case 8:
+        return (
+          <div className="form-step">
+            <h2 className="step-title">Assessment & Recommendations</h2>
+
+            <AssessmentRecommendations
+              reportData={formData}
+              onAssessmentChange={handleAssessmentChange}
+            />
+
+            <hr className="section-divider mt-5" />
+
+            <h3>Safety Initiatives</h3>
+
+            <div className="form-group">
+              <label>Current Safety Initiatives</label>
+              <textarea
+                name="safetyInitiatives.current"
+                value={formData.safetyInitiatives.current}
+                onChange={handleChange}
+                className="form-control"
+                rows="3"
+                placeholder="Describe current safety programs and initiatives..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Upcoming Safety Initiatives (one per line)</label>
+              <textarea
+                name="safetyInitiatives.upcoming"
+                value={Array.isArray(formData.safetyInitiatives.upcoming) ? formData.safetyInitiatives.upcoming.join('\n') : ''}
+                onChange={(e) => {
+                  const upcomingArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    safetyInitiatives: {
+                      ...formData.safetyInitiatives,
+                      upcoming: upcomingArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each upcoming safety initiative on a new line..."
+              ></textarea>
+            </div>
+
+            <hr className="section-divider" />
+
+            <h3>Additional Analysis</h3>
+
+            <div className="form-group">
+              <label>Trends (one per line)</label>
+              <textarea
+                name="analysis.trends"
+                value={Array.isArray(formData.analysis.trends) ? formData.analysis.trends.join('\n') : ''}
+                onChange={(e) => {
+                  const trendsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    analysis: {
+                      ...formData.analysis,
+                      trends: trendsArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each trend on a new line..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Positive Observations (one per line)</label>
+              <textarea
+                name="analysis.positiveObservations"
+                value={Array.isArray(formData.analysis.positiveObservations) ? formData.analysis.positiveObservations.join('\n') : ''}
+                onChange={(e) => {
+                  const observationsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    analysis: {
+                      ...formData.analysis,
+                      positiveObservations: observationsArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each positive observation on a new line..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Areas of Concern (one per line)</label>
+              <textarea
+                name="analysis.concernAreas"
+                value={Array.isArray(formData.analysis.concernAreas) ? formData.analysis.concernAreas.join('\n') : ''}
+                onChange={(e) => {
+                  const concernsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    analysis: {
+                      ...formData.analysis,
+                      concernAreas: concernsArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each area of concern on a new line..."
+              ></textarea>
+            </div>
+
+            <div className="form-group">
+              <label>Recommendations (one per line)</label>
+              <textarea
+                name="analysis.recommendations"
+                value={Array.isArray(formData.analysis.recommendations) ? formData.analysis.recommendations.join('\n') : ''}
+                onChange={(e) => {
+                  const recommendationsArray = e.target.value.split('\n').filter(item => item.trim() !== '');
+                  setFormData({
+                    ...formData,
+                    analysis: {
+                      ...formData.analysis,
+                      recommendations: recommendationsArray
+                    }
+                  });
+                }}
+                className="form-control"
+                rows="3"
+                placeholder="Enter each recommendation on a new line..."
+              ></textarea>
+            </div>
+          </div>
+        );
+
+      default:
+
+        
+
+      return null;
     }
   };
 
-  
+
   return (
     <div className="report-form-container">
       <div className="form-header">
@@ -1360,7 +1444,7 @@ case 7:
         <div className="progress-container">
           <div className="progress-steps">
             {[...Array(totalSteps)].map((_, i) => (
-              <div 
+              <div
                 key={i}
                 className={`step-indicator ${i + 1 === step ? 'active' : ''} ${i + 1 < step ? 'completed' : ''}`}
               >
@@ -1373,44 +1457,44 @@ case 7:
           </div>
         </div>
       </div>
-      
+
       {error && (
         <div className="alert alert-danger" role="alert">
           {error}
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         {renderFormStep()}
-        
+
         <div className="form-navigation">
           {step > 1 && (
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={prevStep}
               className="btn btn-secondary"
             >
               Previous
             </button>
           )}
-          
+
           {step < totalSteps ? (
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={nextStep}
               className="btn btn-primary"
             >
               Next
             </button>
           ) : (
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-success"
             >
               {isEditing ? 'Update Report' : 'Create Report'}
             </button>
           )}
-          
+
           <Link to="/reports" className="btn btn-outline">
             Cancel
           </Link>

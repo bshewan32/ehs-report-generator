@@ -62,6 +62,7 @@ const RiskAssessmentSchema = new Schema({
 
 
 // Main Report Schema
+// Main Report Schema
 const ReportSchema = new Schema({
   companyName: {
     type: String,
@@ -105,6 +106,25 @@ const ReportSchema = new Schema({
       hazardsClosed: Number
     }
   },
+  kpis: [{
+    id: String,
+    name: String,
+    description: String,
+    target: Number,
+    actual: Number,
+    unit: String,
+    year: Number,
+    // Fields for Near Miss Rate calculation
+    nearMissCount: Number,
+    hoursWorked: Number,
+    // Fields for Critical Risk Verification
+    totalTasks: Number,
+    verifiedTasks: Number,
+    // Fields for Electrical Safety Compliance
+    auditItems: Number,
+    compliantItems: Number
+  }],
+  
   historicalData: [
     {
       period: String,

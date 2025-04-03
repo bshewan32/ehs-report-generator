@@ -150,6 +150,9 @@ router.delete('/:id', auth, async (req, res) => {
 // @route   GET api/reports/metrics/summary
 // @desc    Get metrics summary for dashboard
 // @access  Private
+// @route   GET api/reports/metrics/summary
+// @desc    Get metrics summary for dashboard
+// @access  Private
 router.get('/metrics/summary', auth, async (req, res) => {
   try {
     // Get time period from query or default to current year
@@ -173,7 +176,8 @@ router.get('/metrics/summary', auth, async (req, res) => {
       inspectionCompletion: calculateInspectionCompletion(reports),
       trainingCompletion: calculateTrainingCompletion(reports),
       highRiskAreas: calculateTopRiskAreas(reports),
-      complianceStatus: calculateComplianceStatus(reports)
+      complianceStatus: calculateComplianceStatus(reports),
+      kpis: calculateKPIMetrics(reports, year)
     };
     
     res.json(summary);
@@ -246,6 +250,7 @@ function calculateTopRiskAreas(reports) {
 }
 
 // Helper function to calculate overall compliance status
+// Helper function to calculate overall compliance status
 function calculateComplianceStatus(reports) {
   const complianceCounts = {
     'Fully Compliant': 0,
@@ -266,6 +271,34 @@ function calculateComplianceStatus(reports) {
     partiallyCompliant: (complianceCounts['Partially Compliant'] / total) * 100,
     nonCompliant: (complianceCounts['Non-Compliant'] / total) * 100
   };
+}
+
+// Helper function to process KPI data
+function calculateKPIMetrics(reports, year) {
+  // Create a map to store the most recent KPI data
+  const kpiMap = {};
+  
+  // Process all reports
+  reports.forEach(report => {
+    if (report.kpis && report.kpis.length > 0) {
+      report.kpis.forEach(kpi => {
+        // Only include KPIs for the requested year
+        if (kpi.year === year) {
+          // If we don't have this KPI yet, or if this report is more recent
+          const kpiId = kpi.id;
+          if (!kpiMap[kpiId] || new Date(report.reportDate) > new Date(kpiMap[kpiId].reportDate)) {
+            kpiMap[kpiId] = {
+              ...kpi,
+              reportDate: report.reportDate // We'll remove this later
+            };
+          }
+        }
+      });
+    }
+  });
+  
+  // Convert to array and remove the temporary reportDate field
+  return Object.values(kpiMap).map(({ reportDate, ...kpi }) => kpi);
 }
 
 module.exports = router;

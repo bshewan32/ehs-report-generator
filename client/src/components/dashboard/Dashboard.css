@@ -430,3 +430,55 @@ h1, h2, h3, h4 {
 p {
   color: #64748b;
 }
+
+/* KPI Dashboard Section */
+.kpi-dashboard-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-dashboard-section .section-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kpi-dashboard-section .section-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.kpi-period {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.kpi-dashboard-content {
+  padding: 0.5rem;
+  background-color: white;
+}
+
+.no-kpi-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #64748b;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .bottom-section {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,4 +1,3 @@
-// client/src/components/dashboard/MetricsOverview.js
 import React from 'react';
 
 const MetricsOverview = ({ metrics }) => {
@@ -17,7 +16,14 @@ const MetricsOverview = ({ metrics }) => {
     riskAssessmentCount: 7,
     riskAssessmentTrend: 0,
     avgRiskScore: 63,
-    riskScoreTrend: -8
+    riskScoreTrend: -8,
+    // Add KPI-specific metrics
+    nearMissReportingRate: 8.5,
+    nearMissReportingTrend: 4,
+    criticalRiskVerificationRate: 92,
+    criticalRiskVerificationTrend: 3,
+    electricalSafetyComplianceRate: 88,
+    electricalSafetyComplianceTrend: -2
   };
 
   // Use provided metrics or fallback to defaults
@@ -58,99 +64,115 @@ const MetricsOverview = ({ metrics }) => {
 
   return (
     <div className="metrics-overview">
+      <h4 className="metric-section-title">Lagging Indicators</h4>
+      
       {/* Lagging Indicators - Incidents */}
       <div className="metric-card">
         <div className="metric-title">Incidents (YTD)</div>
+        const incidentTrend = getTrendIndicator(data.incidentTrend);
         <div className={`metric-value ${getMetricClass(data.incidentCount, data.incidentTrend, false)}`}>
           {data.incidentCount}
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.incidentTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.incidentTrend).icon}</span>
-          {getTrendIndicator(data.incidentTrend).text}
+        <div className={`metric-trend ${incidentTrend.class}`}>
+          <span className="trend-icon">{incidentTrend.icon}</span>
+          {incidentTrend.text}
         </div>
       </div>
 
       {/* Lagging Indicators - Near Misses */}
       <div className="metric-card">
         <div className="metric-title">Near Misses (YTD)</div>
+        const nearMissTrend = getTrendIndicator(data.nearMissTrend);
         <div className={`metric-value ${getMetricClass(data.nearMissCount, data.nearMissTrend, true)}`}>
           {data.nearMissCount}
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.nearMissTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.nearMissTrend).icon}</span>
-          {getTrendIndicator(data.nearMissTrend).text}
+        <div className={`metric-trend ${nearMissTrend.class}`}>
+          <span className="trend-icon">{nearMissTrend.icon}</span>
+          {nearMissTrend.text}
         </div>
       </div>
 
       {/* Lagging Indicators - First Aid Cases */}
       <div className="metric-card">
         <div className="metric-title">First Aid Cases</div>
+        const firstAidTrend = getTrendIndicator(data.firstAidTrend || 0);
         <div className={`metric-value ${getMetricClass(data.firstAidCount, data.firstAidTrend || 0, false)}`}>
           {data.firstAidCount || 0}
         </div>
-        <div className="metric-trend neutral">
-          <span className="trend-icon">―</span>
-          No trend data
+        <div className={`metric-trend ${firstAidTrend.class}`}>
+          <span className="trend-icon">{firstAidTrend.icon}</span>
+          {firstAidTrend.text}
         </div>
       </div>
 
       {/* Lagging Indicators - Medical Treatment Cases */}
       <div className="metric-card">
         <div className="metric-title">Medical Treatments</div>
+        const medicalTreatmentTrend = getTrendIndicator(data.medicalTreatmentTrend || 0);
         <div className={`metric-value ${getMetricClass(data.medicalTreatmentCount, data.medicalTreatmentTrend || 0, false)}`}>
           {data.medicalTreatmentCount || 0}
         </div>
-        <div className="metric-trend neutral">
-          <span className="trend-icon">―</span>
-          No trend data
+        <div className={`metric-trend ${medicalTreatmentTrend.class}`}>
+          <span className="trend-icon">{medicalTreatmentTrend.icon}</span>
+          {medicalTreatmentTrend.text}
         </div>
       </div>
 
+      <h4 className="metric-section-title">Leading Indicators</h4>
+      
       {/* Leading Indicators - Inspections */}
       <div className="metric-card">
         <div className="metric-title">Inspections (YTD)</div>
+        const inspectionTrend = getTrendIndicator(data.inspectionTrend);
         <div className={`metric-value ${getMetricClass(data.inspectionCount, data.inspectionTrend, true)}`}>
           {data.inspectionCount}
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.inspectionTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.inspectionTrend).icon}</span>
-          {getTrendIndicator(data.inspectionTrend).text}
+        <div className={`metric-trend ${inspectionTrend.class}`}>
+          <span className="trend-icon">{inspectionTrend.icon}</span>
+          {inspectionTrend.text}
         </div>
+      </div>
+
+      <div className="dashboard-metrics-cards">
+        <MetricsOverview metrics={displayMetrics} />
       </div>
 
       {/* Leading Indicators - Training Compliance */}
       <div className="metric-card">
         <div className="metric-title">Training Compliance</div>
+        const trainingTrend = getTrendIndicator(data.trainingTrend);
         <div className={`metric-value ${getMetricClass(data.trainingCompliance, data.trainingTrend, true)}`}>
           {data.trainingCompliance}%
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.trainingTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.trainingTrend).icon}</span>
-          {getTrendIndicator(data.trainingTrend).text}
+        <div className={`metric-trend ${trainingTrend.class}`}>
+          <span className="trend-icon">{trainingTrend.icon}</span>
+          {trainingTrend.text}
         </div>
       </div>
 
       {/* Leading Indicators - Risk Assessments */}
       <div className="metric-card">
         <div className="metric-title">Risk Assessments</div>
+        const riskAssessmentTrend = getTrendIndicator(data.riskAssessmentTrend);
         <div className={`metric-value ${getMetricClass(data.riskAssessmentCount, data.riskAssessmentTrend, true)}`}>
           {data.riskAssessmentCount}
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.riskAssessmentTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.riskAssessmentTrend).icon}</span>
-          {getTrendIndicator(data.riskAssessmentTrend).text}
+        <div className={`metric-trend ${riskAssessmentTrend.class}`}>
+          <span className="trend-icon">{riskAssessmentTrend.icon}</span>
+          {riskAssessmentTrend.text}
         </div>
       </div>
 
       {/* Risk Score */}
       <div className="metric-card">
         <div className="metric-title">Average Risk Score</div>
+        const riskScoreTrend = getTrendIndicator(data.riskScoreTrend);
         <div className={`metric-value ${getMetricClass(data.avgRiskScore, data.riskScoreTrend, false)}`}>
           {data.avgRiskScore}
         </div>
-        <div className={`metric-trend ${getTrendIndicator(data.riskScoreTrend).class}`}>
-          <span className="trend-icon">{getTrendIndicator(data.riskScoreTrend).icon}</span>
-          {getTrendIndicator(data.riskScoreTrend).text}
+        <div className={`metric-trend ${riskScoreTrend.class}`}>
+          <span className="trend-icon">{riskScoreTrend.icon}</span>
+          {riskScoreTrend.text}
         </div>
       </div>
     </div>

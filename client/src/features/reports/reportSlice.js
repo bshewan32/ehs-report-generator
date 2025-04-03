@@ -89,17 +89,17 @@ export const deleteReport = createAsyncThunk(
   }
 );
 
-// Get metrics summary
+
 // Get metrics summary
 export const getMetricsSummary = createAsyncThunk(
   'reports/getMetricsSummary',
   async (_, { rejectWithValue, getState }) => {
     try {
       const res = await api.get('/api/reports/metrics/summary');
-      
+
       // Get all reports from state to calculate additional metrics
       const { reports } = getState().reports;
-      
+
       // Calculate incident counts from reports if they exist
       let additionalMetrics = {};
       if (reports && reports.length > 0) {
@@ -121,10 +121,35 @@ export const getMetricsSummary = createAsyncThunk(
           lostTimeCount: 0,
           fatalityCount: 0
         });
-        
-        additionalMetrics = incidentCounts;
+
+        // Process KPI data if available
+        const currentYear = new Date().getFullYear();
+        const recentKPIs = {};
+
+        reports.forEach(report => {
+          if (report.kpis && report.kpis.length > 0) {
+            report.kpis.forEach(kpi => {
+              // Only process KPIs for the current year
+              if (kpi.year === currentYear) {
+                // If this KPI doesn't exist in our collection yet, or if this report is more recent
+                if (!recentKPIs[kpi.id] || new Date(report.reportDate) > new Date(recentKPIs[kpi.id].reportDate)) {
+                  recentKPIs[kpi.id] = {
+                    ...kpi,
+                    reportDate: report.reportDate
+                  };
+                }
+              }
+            });
+          }
+        });
+
+        // Add KPI data to additional metrics
+        additionalMetrics = {
+          ...incidentCounts,
+          kpis: Object.values(recentKPIs).map(({ reportDate, ...kpi }) => kpi) // Remove the temp reportDate field
+        };
       }
-      
+
       // Combine API metrics with calculated metrics
       return {
         ...res.data,
@@ -135,7 +160,6 @@ export const getMetricsSummary = createAsyncThunk(
     }
   }
 );
-
 const initialState = {
   reports: [],
   report: null,
@@ -167,34 +191,34 @@ const reportSlice = createSlice({
         // Handle both array and object with reports property
         state.reports = Array.isArray(action.payload) ? action.payload :
           (action.payload.reports || []);
-          if (state.reports.length > 0) {
-            const incidentCounts = state.reports.reduce((acc, report) => {
-              if (report.incidents && report.incidents.length > 0) {
-                report.incidents.forEach(incident => {
-                  if (incident.type === 'First Aid') acc.firstAidCount++;
-                  if (incident.type === 'Medical Treatment') acc.medicalTreatmentCount++;
-                  if (incident.type === 'Near Miss') acc.nearMissCount++;
-                  if (incident.type === 'Lost Time') acc.lostTimeCount++;
-                  if (incident.type === 'Fatality') acc.fatalityCount++;
-                });
-              }
-              return acc;
-            }, {
-              firstAidCount: 0,
-              medicalTreatmentCount: 0,
-              nearMissCount: 0,
-              lostTimeCount: 0,
-              fatalityCount: 0
-            });if (!state.metrics) {
-              state.metrics = incidentCounts;
-            } else {
-              state.metrics = {
-                ...state.metrics,
-                ...incidentCounts
-              };
+        if (state.reports.length > 0) {
+          const incidentCounts = state.reports.reduce((acc, report) => {
+            if (report.incidents && report.incidents.length > 0) {
+              report.incidents.forEach(incident => {
+                if (incident.type === 'First Aid') acc.firstAidCount++;
+                if (incident.type === 'Medical Treatment') acc.medicalTreatmentCount++;
+                if (incident.type === 'Near Miss') acc.nearMissCount++;
+                if (incident.type === 'Lost Time') acc.lostTimeCount++;
+                if (incident.type === 'Fatality') acc.fatalityCount++;
+              });
             }
+            return acc;
+          }, {
+            firstAidCount: 0,
+            medicalTreatmentCount: 0,
+            nearMissCount: 0,
+            lostTimeCount: 0,
+            fatalityCount: 0
+          }); if (!state.metrics) {
+            state.metrics = incidentCounts;
+          } else {
+            state.metrics = {
+              ...state.metrics,
+              ...incidentCounts
+            };
           }
-      
+        }
+
       })
       .addCase(getReports.rejected, (state, action) => {
         state.loading = false;

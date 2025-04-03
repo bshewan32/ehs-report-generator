@@ -7,6 +7,7 @@ import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
+import KPITracker from '../kpi/KPITracker';
 
 const ReportView = () => {
   const { id } = useParams();
@@ -582,6 +583,32 @@ const ReportView = () => {
             </div>
           </div>
         </div>
+        <div className="report-section">
+        <h3>Key Performance Indicators</h3>
+        <div className="kpi-section">
+          {report.kpis && report.kpis.length > 0 ? (
+            <KPITracker
+              kpiData={report.kpis}
+              editMode={false}
+              year={report.kpis[0]?.year || new Date().getFullYear()}
+            />
+          ) : (
+            <p>No KPI data available for this report.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="report-section">
+        <h3>Safety Initiatives</h3>
+        <div className="initiatives-section">
+          <div className="current-initiatives">
+            <h4>Current Programs</h4>
+            <p>{report.safetyInitiatives?.current || 'No current initiatives documented.'}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="report-section"></div>
       </div>
     
   );
