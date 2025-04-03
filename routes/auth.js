@@ -1,9 +1,9 @@
-// routes/auth.js - Authentication routes
+// routes/auth.js - Updated version
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const config = require('../config/index'); // Use our custom config
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 require('dotenv').config();
@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     };
 
     const jwtSecret = process.env.JWT_SECRET || config.get('jwtSecret');
-    const jwtExpiration = process.env.JWT_EXPIRATION || config.get('jwtExpiration') || 3600;
+    const jwtExpiration = process.env.JWT_EXPIRATION || config.get('jwtExpiration') || 604800;
     
     jwt.sign(
       payload,

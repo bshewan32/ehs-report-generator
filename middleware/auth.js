@@ -1,9 +1,8 @@
 // middleware/auth.js - Authentication middleware
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const config = require('../config/index');
 const User = require('../models/User');
 
-// Add debugging to middleware/auth.js
 module.exports = function(req, res, next) {
   // Get token from header
   const token = req.header('x-auth-token');
