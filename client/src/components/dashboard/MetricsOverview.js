@@ -62,6 +62,15 @@ const MetricsOverview = ({ metrics }) => {
       : 'negative';
   };
 
+  const incidentTrend = getTrendIndicator(data.incidentTrend);
+  const nearMissTrend = getTrendIndicator(data.nearMissTrend);
+  const firstAidTrend = getTrendIndicator(data.firstAidTrend || 0);
+  const medicalTreatmentTrend = getTrendIndicator(data.medicalTreatmentTrend || 0);
+  const inspectionTrend = getTrendIndicator(data.inspectionTrend);
+  const trainingTrend = getTrendIndicator(data.trainingTrend);
+  const riskAssessmentTrend = getTrendIndicator(data.riskAssessmentTrend);
+  const riskScoreTrend = getTrendIndicator(data.riskScoreTrend);
+
   return (
     <div className="metrics-overview">
       <h4 className="metric-section-title">Lagging Indicators</h4>
@@ -69,7 +78,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Lagging Indicators - Incidents */}
       <div className="metric-card">
         <div className="metric-title">Incidents (YTD)</div>
-        const incidentTrend = getTrendIndicator(data.incidentTrend);
         <div className={`metric-value ${getMetricClass(data.incidentCount, data.incidentTrend, false)}`}>
           {data.incidentCount}
         </div>
@@ -82,7 +90,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Lagging Indicators - Near Misses */}
       <div className="metric-card">
         <div className="metric-title">Near Misses (YTD)</div>
-        const nearMissTrend = getTrendIndicator(data.nearMissTrend);
         <div className={`metric-value ${getMetricClass(data.nearMissCount, data.nearMissTrend, true)}`}>
           {data.nearMissCount}
         </div>
@@ -95,7 +102,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Lagging Indicators - First Aid Cases */}
       <div className="metric-card">
         <div className="metric-title">First Aid Cases</div>
-        const firstAidTrend = getTrendIndicator(data.firstAidTrend || 0);
         <div className={`metric-value ${getMetricClass(data.firstAidCount, data.firstAidTrend || 0, false)}`}>
           {data.firstAidCount || 0}
         </div>
@@ -108,7 +114,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Lagging Indicators - Medical Treatment Cases */}
       <div className="metric-card">
         <div className="metric-title">Medical Treatments</div>
-        const medicalTreatmentTrend = getTrendIndicator(data.medicalTreatmentTrend || 0);
         <div className={`metric-value ${getMetricClass(data.medicalTreatmentCount, data.medicalTreatmentTrend || 0, false)}`}>
           {data.medicalTreatmentCount || 0}
         </div>
@@ -123,7 +128,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Leading Indicators - Inspections */}
       <div className="metric-card">
         <div className="metric-title">Inspections (YTD)</div>
-        const inspectionTrend = getTrendIndicator(data.inspectionTrend);
         <div className={`metric-value ${getMetricClass(data.inspectionCount, data.inspectionTrend, true)}`}>
           {data.inspectionCount}
         </div>
@@ -133,14 +137,9 @@ const MetricsOverview = ({ metrics }) => {
         </div>
       </div>
 
-      <div className="dashboard-metrics-cards">
-        <MetricsOverview metrics={displayMetrics} />
-      </div>
-
       {/* Leading Indicators - Training Compliance */}
       <div className="metric-card">
         <div className="metric-title">Training Compliance</div>
-        const trainingTrend = getTrendIndicator(data.trainingTrend);
         <div className={`metric-value ${getMetricClass(data.trainingCompliance, data.trainingTrend, true)}`}>
           {data.trainingCompliance}%
         </div>
@@ -153,7 +152,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Leading Indicators - Risk Assessments */}
       <div className="metric-card">
         <div className="metric-title">Risk Assessments</div>
-        const riskAssessmentTrend = getTrendIndicator(data.riskAssessmentTrend);
         <div className={`metric-value ${getMetricClass(data.riskAssessmentCount, data.riskAssessmentTrend, true)}`}>
           {data.riskAssessmentCount}
         </div>
@@ -166,7 +164,6 @@ const MetricsOverview = ({ metrics }) => {
       {/* Risk Score */}
       <div className="metric-card">
         <div className="metric-title">Average Risk Score</div>
-        const riskScoreTrend = getTrendIndicator(data.riskScoreTrend);
         <div className={`metric-value ${getMetricClass(data.avgRiskScore, data.riskScoreTrend, false)}`}>
           {data.avgRiskScore}
         </div>

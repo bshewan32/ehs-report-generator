@@ -8,7 +8,7 @@ import OHSMSCompliance from './OHSMSCompliance';
 import AssessmentRecommendations from './AssessmentRecommendations';
 import IncidentMetrics from './IncidentMetrics';
 import KPITracker from '../kpi/KPITracker';
-import c from 'config';
+const api_url = process.env.REACT_APP_API_URL;
 
 // This component will be fleshed out with better UI elements and more comprehensive fields
 
