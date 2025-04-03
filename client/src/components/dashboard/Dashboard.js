@@ -1,3 +1,4 @@
+// client/src/components/dashboard/Dashboard.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,19 +14,9 @@ import MetricsOverview from './MetricsOverview';
 import IncidentTrends from './IncidentTrends';
 import RecentReports from './RecentReports';
 import OHSMSComplianceOverview from './OHSMSComplianceOverview';
-import './Dashboard.css';
 import KPITracker from '../kpi/KPITracker';
 import { syncMetricsWithKPI, enhanceMetricsWithKPI } from './DashboardHelpers';
-
-// Get the calculated incident metrics
-const incidentMetrics = calculateIncidentMetrics();
-  
-// Enhance metrics with KPI data
-const enhancedMetrics = enhanceMetricsWithKPI(metrics);
-
-// Update metrics overview component reference with enhanced metrics
-const displayMetrics = { ...enhancedMetrics, ...incidentMetrics };
-
+import './Dashboard.css';
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -56,6 +47,12 @@ const Dashboard = () => {
   
   // Get the calculated incident metrics
   const incidentMetrics = calculateIncidentMetrics();
+  
+  // Enhance metrics with KPI data (only if metrics exist)
+  const enhancedMetrics = metrics ? enhanceMetricsWithKPI(metrics) : {};
+  
+  // Update metrics overview component reference with enhanced metrics
+  const displayMetrics = { ...(enhancedMetrics || {}), ...incidentMetrics };
   
   if (loading) {
     return (
@@ -92,11 +89,11 @@ const Dashboard = () => {
       
       {/* Improved Metrics Overview Section with better styling */}
       <div className="dashboard-metrics-cards">
-        <MetricsOverview metrics={{...metrics, ...incidentMetrics}} />
+        <MetricsOverview metrics={displayMetrics} />
       </div>
       
       <div className="dashboard-main-content">
-        {/* First row of charts */}
+        {/* KPI Section */}
         <div className="kpi-dashboard-section">
           <div className="section-header">
             <h3>Key Performance Indicators</h3>
