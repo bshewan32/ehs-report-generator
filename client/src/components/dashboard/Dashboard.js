@@ -52,7 +52,12 @@ const Dashboard = () => {
   const enhancedMetrics = metrics ? enhanceMetricsWithKPI(metrics) : {};
   
   // Update metrics overview component reference with enhanced metrics
-  const displayMetrics = { ...(enhancedMetrics || {}), ...incidentMetrics };
+  const displayMetrics = {
+    ...(enhancedMetrics || {}),
+    ...(metrics?.leading || {}),
+    ...(metrics?.lagging || {}),
+    ...incidentMetrics
+  };
   
   if (loading) {
     return (
