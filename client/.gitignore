@@ -28,3 +28,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Allow env.production to be committed
+!/.env.production
