@@ -1,4 +1,3 @@
-// client/src/features/reports/reportSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { api, setAuthToken } from '../../utils/setAuthToken';
 import axios from 'axios';
@@ -143,9 +142,30 @@ export const getMetricsSummary = createAsyncThunk(
           }
         });
 
+        // Add leading metrics
+        const leadingSums = {
+          inspectionsCompleted: 0,
+          inspectionsPlanned: 0,
+          trainingCompleted: 0,
+          safetyObservations: 0,
+          safetyMeetings: 0,
+          hazardsIdentified: 0,
+          hazardsClosed: 0
+        };
+
+        reports.forEach(report => {
+          const leading = report.metrics?.leading || {};
+          for (const key in leadingSums) {
+            if (typeof leading[key] === 'number') {
+              leadingSums[key] += leading[key];
+            }
+          }
+        });
+
         // Add KPI data to additional metrics
         additionalMetrics = {
           ...incidentCounts,
+          ...leadingSums,
           kpis: Object.values(recentKPIs).map(({ reportDate, ...kpi }) => kpi) // Remove the temp reportDate field
         };
       }

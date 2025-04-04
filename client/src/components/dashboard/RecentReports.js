@@ -1,4 +1,3 @@
-// client/src/components/dashboard/RecentReports.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,7 +48,9 @@ const RecentReports = () => {
       {recentReports.map((report, index) => (
         <div key={report._id || index} className="report-item">
           <div className="report-info">
-            <div className="report-name">{report.title || 'Untitled Report'}</div>
+            <div className="report-name">
+              {report.title || `${report.reportType || 'Monthly'} - ${report.reportPeriod || 'Unknown Period'}`}
+            </div>
             <div className="report-period">
               {formatDate(report.reportDate || report.createdAt)}
             </div>

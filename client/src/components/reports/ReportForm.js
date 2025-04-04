@@ -543,14 +543,18 @@ const handleSubmit = (e) => {
   const incidentMetrics = calculateMetricsFromIncidents();
   
   // Update the metrics in the form data
+  const updatedLagging = { ...formData.metrics.lagging };
+  for (const key in incidentMetrics) {
+    if (incidentMetrics[key] > 0) {
+      updatedLagging[key] = incidentMetrics[key];
+    }
+  }
+
   const updatedFormData = {
     ...formData,
     metrics: {
       ...formData.metrics,
-      lagging: {
-        ...formData.metrics.lagging,
-        ...incidentMetrics
-      }
+      lagging: updatedLagging
     }
   };
   
