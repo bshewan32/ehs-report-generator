@@ -9,11 +9,11 @@ const MetricsOverview = ({ metrics }) => {
     incidentTrend: -5,
     nearMissCount: 24,
     nearMissTrend: 15,
-    inspectionCount: 18,
+    inspectionCount: metrics.inspectionsCompleted || 0,
     inspectionTrend: 8,
-    trainingCompliance: 92,
+    trainingCompliance: metrics.trainingCompleted || 0,
     trainingTrend: 3,
-    riskAssessmentCount: 7,
+    riskAssessmentCount: metrics.riskAssessmentCompleted || 0,
     riskAssessmentTrend: 0,
     avgRiskScore: 63,
     riskScoreTrend: -8,
@@ -170,6 +170,33 @@ const MetricsOverview = ({ metrics }) => {
         <div className={`metric-trend ${riskScoreTrend.class}`}>
           <span className="trend-icon">{riskScoreTrend.icon}</span>
           {riskScoreTrend.text}
+        </div>
+      </div>
+
+      <h4 className="metric-section-title">KPI Metrics</h4>
+
+      {/* KPI - Near Miss Reporting Rate */}
+      <div className="metric-card">
+        <div className="metric-title">Near Miss Reporting Rate</div>
+        <div className="metric-value">
+          {data.nearMissReportingRate || 0}
+          <span className="metric-unit"> per 100K hrs</span>
+        </div>
+      </div>
+
+      {/* KPI - Critical Risk Verification */}
+      <div className="metric-card">
+        <div className="metric-title">Critical Risk Verification</div>
+        <div className="metric-value">
+          {data.criticalRiskVerificationRate || 0}%
+        </div>
+      </div>
+
+      {/* KPI - Electrical Safety Compliance */}
+      <div className="metric-card">
+        <div className="metric-title">Electrical Safety Compliance</div>
+        <div className="metric-value">
+          {data.electricalSafetyComplianceRate || 0}%
         </div>
       </div>
     </div>

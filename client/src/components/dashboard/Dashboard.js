@@ -1,4 +1,3 @@
-// client/src/components/dashboard/Dashboard.js
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -53,10 +52,19 @@ const Dashboard = () => {
   
   // Update metrics overview component reference with enhanced metrics
   const displayMetrics = {
-    ...(enhancedMetrics || {}),
-    ...(metrics?.leading || {}),
-    ...(metrics?.lagging || {}),
-    ...incidentMetrics
+    ...incidentMetrics,
+    firstAidCount: incidentMetrics.firstAidCount || metrics?.lagging?.firstAidCases || 0,
+    medicalTreatmentCount: incidentMetrics.medicalTreatmentCount || metrics?.lagging?.medicalTreatmentCases || 0,
+    lostTimeCount: incidentMetrics.lostTimeCount || metrics?.lagging?.lostTimeIncidents || 0,
+    nearMissCount: incidentMetrics.nearMissCount || metrics?.lagging?.nearMissCount || 0,
+    inspectionsCompleted: metrics?.leading?.inspectionsCompleted || 0,
+    inspectionsPlanned: metrics?.leading?.inspectionsPlanned || 0,
+    trainingCompleted: metrics?.leading?.trainingCompleted || 0,
+    safetyObservations: metrics?.leading?.safetyObservations || 0,
+    safetyMeetings: metrics?.leading?.safetyMeetings || 0,
+    hazardsIdentified: metrics?.leading?.hazardsIdentified || 0,
+    hazardsClosed: metrics?.leading?.hazardsClosed || 0,
+    ...enhancedMetrics
   };
   
   if (loading) {
